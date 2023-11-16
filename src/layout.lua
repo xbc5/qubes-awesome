@@ -14,7 +14,7 @@ awful.layout.layouts = {
 }
 
 -- Return an imagebox widget which will contain an icon indicating which layout we're using.
--- If necessary, it will also add it to the screen object as "layout_icon".
+-- If necessary, it will also add it to the screen table as "layout_icon".
 -- @param s An Awesome screen
 function M.icon(s)
   if s.layout_icon ~= nil then

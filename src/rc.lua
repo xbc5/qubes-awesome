@@ -63,18 +63,6 @@ editor_cmd = terminal .. " -e " .. editor
 -- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
 
--- CHECKED: layouts
-awful.layout.layouts = {
-    awful.layout.suit.tile,
-    awful.layout.suit.tile.bottom,
-    awful.layout.suit.fair.horizontal,
-    awful.layout.suit.max,
-    awful.layout.suit.max.fullscreen,
-    awful.layout.suit.magnifier,
-    awful.layout.suit.corner.nw,
-}
-
-
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}

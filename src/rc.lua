@@ -2,9 +2,10 @@
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
 
-local my = {
-  tag = require("tag"),
-  layout = require("layout"),
+local x = {
+  tag = require("x.tag"),
+  task = require("x.task"),
+  layout = require("x.layout"),
 }
 
 local gears = require("gears")
@@ -74,28 +75,6 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
 
-local tasklist_buttons = gears.table.join(
-                     awful.button({ }, 1, function (c)
-                                              if c == client.focus then
-                                                  c.minimized = true
-                                              else
-                                                  c:emit_signal(
-                                                      "request::activate",
-                                                      "tasklist",
-                                                      {raise = true}
-                                                  )
-                                              end
-                                          end),
-                     awful.button({ }, 3, function()
-                                              awful.menu.client_list({ theme = { width = 250 } })
-                                          end),
-                     awful.button({ }, 4, function ()
-                                              awful.client.focus.byidx(1)
-                                          end),
-                     awful.button({ }, 5, function ()
-                                              awful.client.focus.byidx(-1)
-                                          end))
-
 local function set_wallpaper(s)
     -- Wallpaper
     if beautiful.wallpaper then
@@ -116,15 +95,7 @@ awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     set_wallpaper(s)
 
-    my.tag.init(s)
-
-    -- Create a taglist widget
-    -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist {
-        screen  = s,
-        filter  = awful.widget.tasklist.filter.currenttags,
-        buttons = tasklist_buttons
-    }
+    x.tag.init(s)
 
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s })
@@ -134,15 +105,15 @@ awful.screen.connect_for_each_screen(function(s)
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            my.tag.list(s),
+            x.tag.list(s),
         },
-        s.mytasklist, -- Middle widget
+        x.task.list(s), -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             mykeyboardlayout,
             wibox.widget.systray(),
             mytextclock,
-            my.layout.icon(s)
+            x.layout.icon(s)
         },
     }
 end)

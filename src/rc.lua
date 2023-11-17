@@ -5,6 +5,7 @@ pcall(require, "luarocks.loader")
 local x = {
   tag = require("x.tag"),
   task = require("x.task"),
+  toolbar = require("x.toolbar"),
   layout = require("x.layout"),
 }
 
@@ -92,32 +93,10 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 -- per screen config
 awful.screen.connect_for_each_screen(function(s)
-    -- Wallpaper
     set_wallpaper(s)
-
     x.tag.init(s)
-
-    -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s })
-
-    -- Add widgets to the wibox
-    s.mywibox:setup {
-        layout = wibox.layout.align.horizontal,
-        { -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-            x.tag.list(s),
-        },
-        x.task.list(s), -- Middle widget
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            mykeyboardlayout,
-            wibox.widget.systray(),
-            mytextclock,
-            x.layout.icon(s)
-        },
-    }
+    x.toolbar.widget(s)
 end)
--- }}}
 
 
 -- {{{ Key bindings

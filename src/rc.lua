@@ -119,11 +119,6 @@ awful.screen.connect_for_each_screen(function(s)
     my.tag.init(s)
 
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist {
-        screen  = s,
-        filter  = awful.widget.taglist.filter.all,
-    }
-
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist {
         screen  = s,
@@ -139,7 +134,7 @@ awful.screen.connect_for_each_screen(function(s)
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            s.mytaglist,
+            my.tag.list(s),
         },
         s.mytasklist, -- Middle widget
         { -- Right widgets

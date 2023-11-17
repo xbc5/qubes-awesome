@@ -5,6 +5,14 @@ local M = {
   gap = 3,
 }
 
+-- Return a taglist widget.
+function M.list(s)
+  return awful.widget.taglist {
+    screen  = s,
+    filter  = awful.widget.taglist.filter.noempty,
+  }
+end
+
 function M.init(s)
   local n = M.names
 

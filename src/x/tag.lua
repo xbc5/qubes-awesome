@@ -13,6 +13,22 @@ function M.list(s)
   }
 end
 
+-- Return a tag object given its name
+-- @param name The name of the tag
+-- @param s An optional Aweome screen (defaults to the focused screen)
+-- @return a Tag objecy
+function M.get(name, s)
+  return awful.tag.find_by_name(s or awful.screen.focused(), name)
+end
+
+-- Move a client to a tag -- i.e. make it "take" the client.
+-- @param c An Awesome client
+-- @param name The name of the tag
+-- @param s An optional Awesome screen -- see tag.get() for defaults.
+function M.take(c, name, s)
+  c:move_to_tag(M.get(name, s))
+end
+
 function M.init(s)
   local n = M.names
 

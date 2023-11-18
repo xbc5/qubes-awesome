@@ -26,6 +26,8 @@ require("awful.hotkeys_popup.keys")
 local qubes = require("qubes")
 
 
+local modkey = "Mod4"
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -65,7 +67,6 @@ editor_cmd = terminal .. " -e " .. editor
 -- If you do not like this or do not have such a key,
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
-modkey = "Mod4"
 
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it

@@ -60,6 +60,14 @@ function M.take(c, name, s)
   c:move_to_tag(M.get(name, s))
 end
 
+-- View a tag (double tap to toggle)
+-- @param name The name of the tag.
+-- @param s The [optional] screen that the tag resides -- defaults to the focused screen.
+-- @return nil
+function M.view(name, s)
+  awful.tag.viewtoggle(M.get(name, s))
+end
+
 function M.init(s)
   -- specs are thinly specified, and if absent, we shall set a default if we have one
   for _, tg in pairs(M.specs) do

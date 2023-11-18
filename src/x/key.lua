@@ -4,6 +4,9 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
+local x = {
+  tag = require("x.tag"),
+}
 
 local M = {}
 
@@ -28,6 +31,10 @@ function M.client()
   if M._client ~= nil then return M._client end
 
   M._client = gears.table.join(
+    awful.key({ MOD }, "n",
+              function(c) x.tag.view("dev") end,
+              { description = "view the dev tag", group = "tag" }),
+
     awful.key({ MOD }, "f",
               function(c) toggle_fullscreen(c) end,
               { description = "toggle fullscreen", group = "client" }),

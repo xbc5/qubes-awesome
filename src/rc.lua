@@ -3,6 +3,7 @@
 pcall(require, "luarocks.loader")
 
 local x = {
+  client = require("x.client"),
   tag = require("x.tag"),
   task = require("x.task"),
   titlebar = require("x.titlebar"),
@@ -356,33 +357,6 @@ awful.rules.rules = {
 }
 -- }}}
 
--- {{{ Signals
--- Signal function to execute when a new client appears.
-client.connect_signal("manage", function (c)
-    -- Set the windows at the slave,
-    -- i.e. put it at the end of others instead of setting it master.
-    -- if not awesome.startup then awful.client.setslave(c) end
-
-    qubes.manage(c)
-    if awesome.startup
-      and not c.size_hints.user_position
-      and not c.size_hints.program_position then
-        -- Prevent clients from being unreachable after screen count changes.
-        awful.placement.no_offscreen(c)
-    end
-end)
-
--- Put the Qube name in front of all displayed names (tilebars, tasklists, ...)
-client.connect_signal("property::name", function(c) qubes.set_name(c) end)
-
--- Enable sloppy focus, so that focus follows mouse.
-client.connect_signal("mouse::enter", function(c)
-    c:emit_signal("request::activate", "mouse_enter", {raise = false})
-end)
-
-client.connect_signal("focus", function(c) c.border_color = qubes.get_colour_focus(c) end)
-client.connect_signal("unfocus", function(c) c.border_color = qubes.get_colour(c) end)
--- }}}
 
 -- Use dex to run the xdg autostart files
 -- for now run the ones for XFCE

@@ -372,12 +372,6 @@ client.connect_signal("manage", function (c)
     end
 end)
 
--- Add a titlebar if titlebars_enabled is set to true in the rules.
-client.connect_signal("request::titlebars", function(c)
-    qubes.manage(c)
-    x.titlebar.create(c)
-end)
-
 -- Put the Qube name in front of all displayed names (tilebars, tasklists, ...)
 client.connect_signal("property::name", function(c) qubes.set_name(c) end)
 

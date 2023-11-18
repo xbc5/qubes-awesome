@@ -1,6 +1,7 @@
 local awful = require("awful")
 local qubes = require("qubes")
 local x = {
+  key = require("x.key"),
   tag = require("x.tag"),
   notify = require("x.notify"),
 }
@@ -44,7 +45,7 @@ awful.rules.rules = {
       properties = {
         focus = awful.client.focus.filter,
         raise = true,
-        keys = clientkeys,
+        keys = x.key.client(),
         buttons = clientbuttons,
         screen = awful.screen.preferred,
         placement = awful.placement.no_overlap+awful.placement.no_offscreen

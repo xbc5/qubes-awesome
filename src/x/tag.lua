@@ -1,9 +1,40 @@
 local awful = require("awful")
 
 local M = {
-  names = { daily = "daily", dev = "dev", dev_s = "dev-s" },
-  gap = 3,
+  defaults = {
+    layout             = awful.layout.suit.max,
+    master_fill_policy = "master_width_factor",
+    gap_single_client  = false,
+    gap                = 3,
+  },
+  specs = {
+    { name = "daily",
+      key = "m",
+      spec = { selected = true, },
+    },
+    { name = "dev:b",
+      key = "n",
+      spec = { },
+    },
+    { name = "dev:t",
+      key = "u",
+      spec = { },
+    },
+    { name = "dev-s",
+      key = "u",
+      spec = { },
+    },
+    { name = "dom0",
+      key = "s",
+      spec = { },
+    },
+    { name = "read",
+      key = "r",
+      spec = { },
+    },
+  }
 }
+
 
 -- Return a taglist widget.
 function M.list(s)
@@ -30,34 +61,15 @@ function M.take(c, name, s)
 end
 
 function M.init(s)
-  local n = M.names
-
-  awful.tag.add(n.daily, {
-    layout             = awful.layout.suit.max,
-    master_fill_policy = "master_width_factor",
-    gap_single_client  = false,
-    gap                = M.gap,
-    screen             = s,
-    selected           = true,
-  })
-
-  awful.tag.add(n.dev, {
-    layout             = awful.layout.suit.max,
-    master_fill_policy = "master_width_factor",
-    gap_single_client  = false,
-    gap                = M.gap,
-    screen             = s,
-    selected           = false,
-  })
-
-  awful.tag.add(n.dev_s, {
-    layout             = awful.layout.suit.max,
-    master_fill_policy = "master_width_factor",
-    gap_single_client  = false,
-    gap                = M.gap,
-    screen             = s,
-    selected           = false,
-  })
+  -- specs are thinly specified, and if absent, we shall set a default if we have one
+  for _, tg in pairs(M.specs) do
+    for key, _ in pairs(M.defaults) do -- e.g. a key is: layouts, gap etc.
+      -- a spec is e.g.: { layout = x, ... }, from M.specs[].spec
+      if tg.spec[key] == nil then tg.spec[key] = M[key] end -- use defaults from M.defaults
+    end
+    tg.spec.screen = s
+    awful.tag.add(tg.name, tg.spec)
+  end
 end
 
 return M

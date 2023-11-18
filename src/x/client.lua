@@ -20,13 +20,6 @@ client.connect_signal("manage", function (c)
 
   x.notify.test(c.qubes_vmname)
 
-  local n = x.tag.names
-  if c.qubes_vmname == "dev" then
-    x.tag.take(c, n.dev)
-  elseif c.qubes_vmname == "daily" then
-    x.tag.take(c, n.daily)
-  end
-
   -- config goes here
   c.border_width = 0
 

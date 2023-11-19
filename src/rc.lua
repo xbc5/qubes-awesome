@@ -53,19 +53,10 @@ end
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "kitty"
 editor = os.getenv("EDITOR") or "vim"
+terminal = "kitty"  -- TODO: use env for these (remember ENVS differ for login shells)
 editor_cmd = terminal .. " -e " .. editor
-
--- Default modkey.
--- Usually, Mod4 is the key with a logo between Control and Alt.
--- If you do not like this or do not have such a key,
--- I suggest you to remap Mod4 to another key using xmodmap or other tools.
--- However, you can use another modifier like Mod1, but it may interact with others.
-
--- Menubar configuration
-menubar.utils.terminal = terminal -- Set the terminal for applications that require it
--- }}}
+menubar.utils.terminal = terminal
 
 -- Keyboard map indicator and switcher
 mykeyboardlayout = awful.widget.keyboardlayout()

@@ -1,6 +1,7 @@
 local gears = require("gears")
 local awful = require("awful")
 local hotkeys_popup = require("awful.hotkeys_popup")
+local menubar = require("menubar")
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -131,38 +132,38 @@ function M.global()
               function() awful.spawn(terminal) end,
               { description = "open a terminal", group = "launcher" }),
 
-    awful.key({ MOD, "Control" }, "r",
-              awesome.restart,
+    awful.key({ MOD, "Shift" }, "r",
+              function() awesome.restart() end,
               { description = "reload awesome", group = "awesome" }),
 
     awful.key({ MOD, "Shift" }, "q",
-              awesome.quit,
+              function() awesome.quit() end,
               { description = "quit awesome", group = "awesome" }),
 
     awful.key({ MOD }, "l",
               function() awful.tag.incmwfact(0.05) end,
-              { description = "increase master width factor", group = "layout" }),
+              { description = "width++", group = "layout" }),
 
     awful.key({ MOD }, "h",
               function() awful.tag.incmwfact(-0.05) end,
-              { description = "decrease master width factor", group = "layout" }),
+              { description = "width--", group = "layout" }),
 
     awful.key({ MOD, "Shift" }, "h",
               function() awful.tag.incnmaster(1, nil, true) end,
-              { description = "increase the number of master clients", group = "layout" }),
+              { description = "master clients++", group = "layout" }),
 
     awful.key({ MOD, "Shift" }, "l",
               function() awful.tag.incnmaster(-1, nil, true) end,
-              { description = "decrease the number of master clients", group = "layout" }),
+              { description = "master clients--", group = "layout" }),
 
     -- resize width
     awful.key({ MOD, "Control" }, "h",
               function() awful.tag.incncol(1, nil, true) end,
-              { description = "increase the number of columns", group = "layout" }),
+              { description = "columns++", group = "layout" }),
 
     awful.key({ MOD, "Control" }, "l",
               function() awful.tag.incncol(-1, nil, true) end,
-              { description = "decrease the number of columns", group = "layout" }),
+              { description = "colimns--", group = "layout" }),
 
     -- change layout
     awful.key({ MOD }, "space",

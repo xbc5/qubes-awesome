@@ -18,8 +18,6 @@ end
 client.connect_signal("manage", function (c)
   qubes.manage(c) -- sets qubes_vmname, qubes_label, qubes_prefix (e.g. [dom0]), and border_colour
 
-  x.notify.test(c.qubes_vmname)
-
   -- config goes here
   c.border_width = 0
 

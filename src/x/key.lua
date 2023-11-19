@@ -31,8 +31,8 @@ function M.client()
   if M._client ~= nil then return M._client end
 
   M._client = gears.table.join(
-    awful.key({ MOD }, "n",
-              function(c) x.tag.view("dev") end,
+    awful.key({ MOD }, "x",
+              function(c) x.tag.view("dev:b") end,
               { description = "view the dev tag", group = "tag" }),
 
     awful.key({ MOD }, "f",

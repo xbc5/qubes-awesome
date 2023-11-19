@@ -7,6 +7,7 @@ local menubar = require("menubar")
 require("awful.hotkeys_popup.keys")
 local x = {
   tag = require("x.tag"),
+  app = require("x.app"),
 }
 
 local M = {}
@@ -82,18 +83,6 @@ function M.global()
               hotkeys_popup.show_help,
               { description = "show help", group = "awesome" }),
 
-   awful.key({ MOD }, "Left",
-             awful.tag.viewprev,
-             { description = "view previous", group = "tag" }),
-
-   awful.key({ MOD }, "Right",
-             awful.tag.viewnext,
-             { description = "view next", group = "tag" }),
-
-   awful.key({ MOD }, "Escape",
-             awful.tag.history.restore,
-             { description = "go back", group = "tag" }),
-
     awful.key({ MOD }, "j",
               function() awful.client.focus.byidx(1) end,
               { description = "focus next by index", group = "client" }),
@@ -129,8 +118,8 @@ function M.global()
 
     -- Standard program
     awful.key({ MOD, "Shift" }, "Return",
-              function() awful.spawn(terminal) end,
-              { description = "open a terminal", group = "launcher" }),
+              function() awful.spawn(x.app.terminal()) end,
+              { description = "terminal", group = "launcher" }),
 
     awful.key({ MOD, "Shift" }, "r",
               function() awesome.restart() end,

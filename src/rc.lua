@@ -18,7 +18,6 @@ require("awful.autofocus")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local naughty = require("naughty")
-local menubar = require("menubar")
 
 local modkey = "Mod4"
 
@@ -51,12 +50,6 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
-
--- This is used later as the default terminal and editor to run.
-editor = os.getenv("EDITOR") or "vim"
-terminal = "kitty"  -- TODO: use env for these (remember ENVS differ for login shells)
-editor_cmd = terminal .. " -e " .. editor
-menubar.utils.terminal = terminal
 
 -- Keyboard map indicator and switcher
 mykeyboardlayout = awful.widget.keyboardlayout()

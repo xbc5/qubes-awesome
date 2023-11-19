@@ -60,12 +60,20 @@ function M.take(c, name, s)
   c:move_to_tag(M.get(name, s))
 end
 
--- View a tag (double tap to toggle)
+-- View a tag
 -- @param name The name of the tag.
 -- @param s The [optional] screen that the tag resides -- defaults to the focused screen.
 -- @return nil
 function M.view(name, s)
   M.get(name, s):view_only()
+end
+
+-- Move a client to a tag.
+-- @param name The name of the tag.
+-- @param s The [optional] screen that the tag resides -- defaults to the focused screen.
+-- @return nil
+function M.move(name, s)
+  client.focus:move_to_tag(M.get(name, s))
 end
 
 function M.init(s)

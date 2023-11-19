@@ -78,10 +78,15 @@ function M.global()
   for _, spec in pairs(x.tag.specs) do
     -- FIXME: very inefficient (N^3) -- join uses nested loops and select(), where select
     -- uses progressive slices, and join increments those slices, then this uses a loop.
-    _tags = gears.table.join(_tags, awful.key(
-      { MOD }, spec.key,
-      function() x.tag.view(spec.name) end,
-      { description = "view " .. spec.name .. "tag", group = "tag" }))
+    -- This is only run once, and it's a small data structure; it's probably not worth the effort.
+    _tags = gears.table.join(
+      _tags,
+      awful.key({ MOD }, spec.key,
+                function() x.tag.view(spec.name) end,
+                { description = "view " .. spec.name .. "tag", group = "tag" }),
+      awful.key({ MOD, "Control" }, spec.key,
+                function() x.tag.move(spec.name) end,
+                { description = "move " .. spec.name .. "tag", group = "tag" }))
   end
 
   M._global = gears.table.join(

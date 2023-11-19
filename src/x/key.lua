@@ -33,7 +33,7 @@ function M.client()
   M._client = gears.table.join(
     awful.key({ MOD }, "x",
               function(c) x.tag.view("dev:b") end,
-              { description = "view the dev tag", group = "tag" }),
+              { description = "view dev tag", group = "tag" }),
 
     awful.key({ MOD }, "f",
               function(c) toggle_fullscreen(c) end,
@@ -59,8 +59,12 @@ function M.client()
               function(c) c.ontop = not c.ontop end,
               { description = "toggle keep on top", group = "client" }),
 
-    awful.key({ MOD }, "n",
+    awful.key({ MOD }, "-",
               function(c) c.minimized = true end,
+              { description = "minimize", group = "client" }),
+
+    awful.key({ MOD, "Shift" }, "-",
+              function(c) awful.client.restore(awful.screen.focused()) end,
               { description = "minimize", group = "client" }),
 
     awful.key({ MOD }, "m",

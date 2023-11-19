@@ -33,10 +33,6 @@ function M.client()
   if M._client ~= nil then return M._client end
 
   M._client = gears.table.join(
-    awful.key({ MOD }, "x",
-              function(c) x.tag.view("dev:b") end,
-              { description = "view dev tag", group = "tag" }),
-
     awful.key({ MOD, "Shift" }, "f",
               function(c) toggle_fullscreen(c) end,
               { description = "toggle fullscreen", group = "client" }),
@@ -79,6 +75,10 @@ function M.global()
   if M._global ~= nil then return M._global end
 
   M._global = gears.table.join(
+    awful.key({ MOD }, "x",
+              function() x.tag.view("dev:b") end,
+              { description = "view dev tag", group = "tag" }),
+
     awful.key({ MOD }, "s",
               hotkeys_popup.show_help,
               { description = "show help", group = "awesome" }),

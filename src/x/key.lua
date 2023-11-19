@@ -43,8 +43,8 @@ function M.client()
               function(c) c:kill() end,
               { description = "close", group = "client" }),
 
-    awful.key({ MOD, "Control" }, "space",
-              awful.client.floating.toggle,
+    awful.key({ MOD, "Shift" }, "0",
+              function(c) c.floating = not c.floating end,
               { description = "toggle floating", group = "client" }),
 
     awful.key({ MOD }, "Return",

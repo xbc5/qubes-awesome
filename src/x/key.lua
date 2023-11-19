@@ -35,7 +35,7 @@ function M.client()
               function(c) x.tag.view("dev:b") end,
               { description = "view dev tag", group = "tag" }),
 
-    awful.key({ MOD }, "f",
+    awful.key({ MOD, "Shift" }, "f",
               function(c) toggle_fullscreen(c) end,
               { description = "toggle fullscreen", group = "client" }),
 
@@ -51,7 +51,7 @@ function M.client()
               function(c) awful.client.setmaster(c) end,
               { description = "move to master", group = "client" }),
 
-    awful.key({ MOD }, "t",
+    awful.key({ MOD, "Shift" }, "t",
               function(c) c.ontop = not c.ontop end,
               { description = "toggle keep on top", group = "client" }),
 
@@ -63,7 +63,7 @@ function M.client()
               function() awful.client.restore(awful.screen.focused()) end,
               { description = "minimize", group = "client" }),
 
-    awful.key({ MOD }, "m",
+    awful.key({ MOD, "Shift" }, "m",
               function(c) toggle_maximised(c) end,
               { description = "(un)maximize", group = "client" }))
 

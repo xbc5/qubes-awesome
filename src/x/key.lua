@@ -47,13 +47,9 @@ function M.client()
               awful.client.floating.toggle,
               { description = "toggle floating", group = "client" }),
 
-    awful.key({ MOD, "Control" }, "Return",
-              function(c) c:swap(awful.client.getmaster()) end,
+    awful.key({ MOD }, "Return",
+              function(c) awful.client.setmaster(c) end,
               { description = "move to master", group = "client" }),
-
-    awful.key({ MOD }, "o",
-              function(c) c:move_to_screen() end,
-              { description = "move to screen", group = "client" }),
 
     awful.key({ MOD }, "t",
               function(c) c.ontop = not c.ontop end,
@@ -64,7 +60,7 @@ function M.client()
               { description = "minimize", group = "client" }),
 
     awful.key({ MOD, "Shift" }, "-",
-              function(c) awful.client.restore(awful.screen.focused()) end,
+              function() awful.client.restore(awful.screen.focused()) end,
               { description = "minimize", group = "client" }),
 
     awful.key({ MOD }, "m",
@@ -131,7 +127,7 @@ function M.global()
               { description = "go back", group = "client" }),
 
     -- Standard program
-    awful.key({ MOD }, "Return",
+    awful.key({ MOD, "Shift" }, "Return",
               function() awful.spawn(terminal) end,
               { description = "open a terminal", group = "launcher" }),
 

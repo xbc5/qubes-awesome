@@ -91,7 +91,7 @@ function M.global()
 
   M._global = gears.table.join(
     _tags,
-    awful.key({ MOD }, "s",
+    awful.key({ MOD, "Shift" }, "s",
               hotkeys_popup.show_help,
               { description = "show help", group = "awesome" }),
 

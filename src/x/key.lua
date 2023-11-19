@@ -74,11 +74,18 @@ end
 function M.global()
   if M._global ~= nil then return M._global end
 
-  M._global = gears.table.join(
-    awful.key({ MOD }, "x",
-              function() x.tag.view("dev:b") end,
-              { description = "view dev tag", group = "tag" }),
+  local _tags = {}
+  for _, spec in pairs(x.tag.specs) do
+    -- FIXME: very inefficient (N^3) -- join uses nested loops and select(), where select
+    -- uses progressive slices, and join increments those slices, then this uses a loop.
+    _tags = gears.table.join(_tags, awful.key(
+      { MOD }, spec.key,
+      function() x.tag.view(spec.name) end,
+      { description = "view " .. spec.name .. "tag", group = "tag" }))
+  end
 
+  M._global = gears.table.join(
+    _tags,
     awful.key({ MOD }, "s",
               hotkeys_popup.show_help,
               { description = "show help", group = "awesome" }),

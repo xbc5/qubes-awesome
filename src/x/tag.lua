@@ -21,7 +21,7 @@ local M = {
       spec = { },
     },
     { name = "dev-s",
-      key = "u",
+      key = "i",
       spec = { },
     },
     { name = "dom0",
@@ -65,7 +65,7 @@ end
 -- @param s The [optional] screen that the tag resides -- defaults to the focused screen.
 -- @return nil
 function M.view(name, s)
-  awful.tag.viewtoggle(M.get(name, s))
+  M.get(name, s):view_only()
 end
 
 function M.init(s)

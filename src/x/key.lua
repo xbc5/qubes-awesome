@@ -6,8 +6,9 @@ local menubar = require("menubar")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 local x = {
-  tag = require("x.tag"),
   app = require("x.app"),
+  cmd = require("x.cmd"),
+  tag = require("x.tag"),
 }
 
 local M = {}
@@ -91,6 +92,10 @@ function M.global()
 
   M._global = gears.table.join(
     _tags,
+    awful.key({ MOD }, ",",
+              function() x.cmd.notes() end,
+              { description = "show help", group = "awesome" }),
+
     awful.key({ MOD, "Shift" }, "s",
               hotkeys_popup.show_help,
               { description = "show help", group = "awesome" }),

@@ -21,7 +21,7 @@ end
 -- @param cb The callback: cb() -- no args; called when exit_code == 0.
 function M.notes(cb)
   M.async("notes --wait", function(ok)
-    if ok then cb() end
+    if ok and cb then cb() end
   end)
 end
 

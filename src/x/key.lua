@@ -9,6 +9,7 @@ local x = {
   app = require("x.app"),
   cmd = require("x.cmd"),
   tag = require("x.tag"),
+  scratch = require("x.scratch"),
 }
 
 local M = {}
@@ -93,8 +94,8 @@ function M.global()
   M._global = gears.table.join(
     _tags,
     awful.key({ MOD }, ",",
-              function() x.cmd.notes() end,
-              { description = "show help", group = "awesome" }),
+              function() x.scratch.toggle(x.scratch.keys.notes, x.cmd.notes) end,
+              { description = "show notes", group = "launcher" }),
 
     awful.key({ MOD, "Shift" }, "s",
               hotkeys_popup.show_help,

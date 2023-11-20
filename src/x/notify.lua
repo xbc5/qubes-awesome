@@ -24,4 +24,12 @@ function M.run_error(msg, log)
   })
 end
 
+function M.client_error(msg, log)
+  naughty.notify({
+    preset = M.preset.critical,
+    title = "Client error",
+    text = msg,
+  })
+end
+
 return M

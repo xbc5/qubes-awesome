@@ -1,7 +1,12 @@
 local awful = require("awful")
+local gears = require("gears")
+local x = {
+  util = require("x.util"),
+}
 
 local M = {
   defaults = {
+    -- keep this flat (no nested tables) otherwise do deep copy (see init fn)
     layout             = awful.layout.suit.max,
     master_fill_policy = "master_width_factor",
     gap_single_client  = false,
@@ -77,14 +82,11 @@ function M.move(name, s)
 end
 
 function M.init(s)
-  -- specs are thinly specified, and if absent, we shall set a default if we have one
+  -- merge specs into defaults, then use that
   for _, tg in pairs(M.specs) do
-    for key, _ in pairs(M.defaults) do -- e.g. a key is: layouts, gap etc.
-      -- a spec is e.g.: { layout = x, ... }, from M.specs[].spec
-      if tg.spec[key] == nil then tg.spec[key] = M[key] end -- use defaults from M.defaults
-    end
-    tg.spec.screen = s
-    awful.tag.add(tg.name, tg.spec)
+    local spec = gears.table.crush(x.util.shallow_copy(M.defaults), tg.spec)
+    spec.screen = s
+    awful.tag.add(tg.name, spec)
   end
 end
 

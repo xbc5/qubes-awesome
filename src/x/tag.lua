@@ -24,7 +24,7 @@ local M = {
     { name = "dev:t",
       key = "u",
       spec = {
-        layout = awful.layout.suit.corner.nw,
+        layout = awful.layout.suit.tile,
       },
     },
     { name = "dev-s",

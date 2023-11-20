@@ -15,6 +15,7 @@ function M.widget(s)
 
   M._widget = awful.wibar({ position = "top", screen = s })
 
+  x.layout.init() -- we probably want to set this before using layouts in the widget
   local h = wibox.layout.align.horizontal
   M._widget:setup {
     layout = h,
@@ -27,7 +28,7 @@ function M.widget(s)
       layout = h,
       wibox.widget.systray(),
       mytextclock,
-      x.layout.icon(s),
+      awful.widget.layoutbox(s),
     },
   }
 

@@ -9,8 +9,8 @@ local x = {
   task = require("x.task"),
   titlebar = require("x.titlebar"),
   toolbar = require("x.toolbar"),
-  layout = require("x.layout"),
 }
+
 
 local gears = require("gears")
 local awful = require("awful")

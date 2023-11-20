@@ -23,7 +23,9 @@ local M = {
     },
     { name = "dev:t",
       key = "u",
-      spec = { },
+      spec = {
+        layout = awful.layout.suit.corner.nw,
+      },
     },
     { name = "dev-s",
       key = "i",
@@ -31,10 +33,6 @@ local M = {
     },
     { name = "dom0",
       key = "s",
-      spec = { },
-    },
-    { name = "read",
-      key = "r",
       spec = { },
     },
   }

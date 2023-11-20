@@ -8,6 +8,7 @@ require("awful.hotkeys_popup.keys")
 local x = {
   app = require("x.app"),
   cmd = require("x.cmd"),
+  layout = require("x.layout"),
   tag = require("x.tag"),
   scratch = require("x.scratch"),
 }
@@ -91,8 +92,18 @@ function M.global()
                 { description = "move " .. spec.name .. "tag", group = "tag" }))
   end
 
+  local _layouts = {}
+  for i, lay in pairs(x.layout.layouts) do
+    _layouts = gears.table.join(
+      _layouts,
+      awful.key({ MOD }, i,
+                function() awful.layout.set(lay.l) end,
+                { description = "set " .. lay.name, group = "layout" }))
+  end
+
   M._global = gears.table.join(
     _tags,
+    _layouts,
     awful.key({ MOD }, ",",
               function() x.scratch.toggle(x.scratch.keys.notes, x.cmd.notes) end,
               { description = "show notes", group = "launcher" }),

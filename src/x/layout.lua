@@ -1,17 +1,21 @@
 local gears = require("gears")
 local awful = require("awful")
-
-local M = {}
-
-awful.layout.layouts = {
-  awful.layout.suit.tile,
-  awful.layout.suit.tile.bottom,
-  awful.layout.suit.fair.horizontal,
-  awful.layout.suit.max,
-  awful.layout.suit.max.fullscreen,
-  awful.layout.suit.magnifier,
-  awful.layout.suit.corner.nw,
+local x = {
+  util = require("x.util"),
 }
+
+local M = {
+  -- name is for cheatsheet
+  layouts = {
+    { l = awful.layout.suit.max, name = "max" },
+    { l = awful.layout.suit.tile, name = "tile" },
+    { l = awful.layout.suit.corner.nw, name = "corner.nw" },
+    { l = awful.layout.suit.fair.horizontal, name = "horizontal" },
+    { l = awful.layout.suit.tile.bottom, name = "tile.bottom" },
+  },
+}
+
+awful.layout.layouts = x.util.map(M.layouts, function(v) return v.l end)
 
 -- Return an imagebox widget which will contain an icon indicating which layout we're using.
 -- If necessary, it will also add it to the screen table as "mylayoutbox".

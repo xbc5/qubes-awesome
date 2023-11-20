@@ -10,7 +10,7 @@ local M = {
   keys = { notes = notes.class },
   clients = {}, -- a cache to hold active clients for easy searching
   rules = {
-    modals = { class = { notes.class }, role = { "scratch:modal" } },
+    modals = { class = { notes.class } },
   },
 }
 
@@ -45,14 +45,19 @@ end
 -- @param fn The [optional] function that starts the command, client or application --
 --  async or not, it doesn't matter: fn() (no args).
 function M.toggle(key, fn)
-  if fn and not M.has(key) then return fn() end -- launch if no cached client
   local c = M.get(key)
-  c.hidden = not c.hidden
+  if c then
+    c.hidden = not c.hidden
+    client.focus = c
+    c:raise()
+  elseif fn then
+    fn()
+  end
 end
 
 client.connect_signal("manage", function(c)
   if awful.rules.match_any(c, M.rules.modals ) then
-    c.role = "scratch:modal"
+    c.xrole = "scratch:modal"
     c.floating = true
     c.ontop = true
     c.above = true
@@ -61,12 +66,16 @@ client.connect_signal("manage", function(c)
     c.hidden = false -- on creation
     c.screen = awful.screen.focused()
 
+    c.maximized = true
+    client.focus = c
+    c:raise()
+
     M.add(c)
   end
 end)
 
 client.connect_signal("unmanage", function(c)
-  if c.role == "scratch:modal" then
+  if c.xrole == "scratch:modal" then
     M.del(c)
   end
 end)

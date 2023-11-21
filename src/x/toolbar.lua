@@ -27,7 +27,7 @@ function M.widget(s)
     { -- right
       layout = h,
       wibox.widget.systray(),
-      mytextclock,
+      wibox.widget.textclock(),
       awful.widget.layoutbox(s),
     },
   }

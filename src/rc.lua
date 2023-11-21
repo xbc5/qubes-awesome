@@ -3,7 +3,12 @@
 pcall(require, "luarocks.loader")
 require("x.rule")
 require("x.fuzzy_launcher")
+require("awful.autofocus")
 
+local gears = require("gears")
+local awful = require("awful")
+local beautiful = require("beautiful")
+local naughty = require("naughty")
 local x = {
   client = require("x.client"),
   key = require("x.key"),
@@ -13,19 +18,8 @@ local x = {
   toolbar = require("x.toolbar"),
 }
 
-
-local gears = require("gears")
-local awful = require("awful")
-require("awful.autofocus")
-local wibox = require("wibox")
-local beautiful = require("beautiful")
-local naughty = require("naughty")
-
 x.tag.init()
 
--- {{{ Error handling
--- Check if awesome encountered an error during startup and fell back to
--- another config (This code will only ever execute for the fallback config)
 if awesome.startup_errors then
     naughty.notify({ preset = naughty.config.presets.critical,
                      title = "Oops, there were errors during startup!",
@@ -46,18 +40,8 @@ do
         in_error = false
     end)
 end
--- }}}
 
--- {{{ Variable definitions
--- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
-
--- Keyboard map indicator and switcher
-mykeyboardlayout = awful.widget.keyboardlayout()
-
--- {{{ Wibar
--- Create a textclock widget
-mytextclock = wibox.widget.textclock()
 
 local function set_wallpaper(s)
     -- Wallpaper
@@ -82,6 +66,4 @@ end)
 
 root.keys(x.key.global())
 
--- Use dex to run the xdg autostart files
--- for now run the ones for XFCE
 awful.spawn('bash -c "pgrep -f -a qvm-start-daemon | grep -v $$ || dex-autostart -a -e XFCE"')

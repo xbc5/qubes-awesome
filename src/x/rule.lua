@@ -14,6 +14,7 @@ awful.rules.rules = {
     -- All clients will match this rule.
     { rule = { },
       properties = {
+        border_width = 0,
         focus = awful.client.focus.filter,
         keys = x.key.client(),
         screen = awful.screen.preferred,

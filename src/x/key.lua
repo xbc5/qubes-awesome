@@ -207,15 +207,6 @@ function M.global()
               function() awful.tag.incncol(-1, nil, true) end,
               { description = "colimns--", group = "layout" }),
 
-    -- change layout
-    awful.key({ MOD }, "space",
-              function() awful.layout.inc(1) end,
-              { description = "select next", group = "layout" }),
-
-    awful.key({ MOD, "Shift" }, "space",
-              function() awful.layout.inc(-1) end,
-              { description = "select previous", group = "layout" }),
-
     -- run
     awful.key({ MOD }, "p",
               function() menubar.show() end,

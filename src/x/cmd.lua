@@ -11,7 +11,7 @@ local M = {}
 function M.async(cmd, cb)
   awful.spawn.easy_async(cmd, function(stdout, stderr, _, exit_code)
     if exit_code > 0 then
-      x.notify.run_error("notes", stderr)
+      x.notify.run_error(cmd, stderr)
     end
     cb(exit_code == 0, stdout, stderr)
   end)
@@ -21,6 +21,12 @@ end
 -- @param cb The callback: cb() -- no args; called when exit_code == 0.
 function M.notes(cb)
   M.async("notes --wait", function(ok)
+    if ok and cb then cb() end
+  end)
+end
+
+function M.ide(qube, cb)
+  M.async("ide " ..  qube, function(ok)
     if ok and cb then cb() end
   end)
 end

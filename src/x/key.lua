@@ -11,6 +11,7 @@ local x = {
   layout = require("x.layout"),
   tag = require("x.tag"),
   scratch = require("x.scratch"),
+  qube = require("x.qube"),
 }
 
 local M = {}
@@ -104,6 +105,14 @@ function M.global()
   M._global = gears.table.join(
     _tags,
     _layouts,
+    awful.key({ MOD, "Shift" }, "p",
+              function() x.cmd.ide(x.qube.dev) end,
+              { description = x.qube.dev .. " IDE", group = "launcher" }),
+
+    awful.key({ MOD, "Shift" }, "i",
+              function() x.cmd.ide(x.qube.dev_s) end,
+              { description = x.qube.dev_s .. " IDE", group = "launcher" }),
+
     awful.key({ MOD }, ",",
               function() x.scratch.toggle(x.scratch.keys.notes, x.cmd.notes) end,
               { description = "show notes", group = "launcher" }),

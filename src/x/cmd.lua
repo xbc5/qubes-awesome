@@ -31,4 +31,13 @@ function M.ide(qube, cb)
   end)
 end
 
+-- Control the volume.
+-- @param cmd Up, down, or mute.
+-- @param cb The callback: cb() -- no args; called when exit_code == 0.
+function M.volume(cmd, cb)
+  M.async("volume " .. cmd, function(ok)
+    if ok and cb then cb() end
+  end)
+end
+
 return M

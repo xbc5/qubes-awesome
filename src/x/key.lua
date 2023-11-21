@@ -105,6 +105,21 @@ function M.global()
   M._global = gears.table.join(
     _tags,
     _layouts,
+
+    -- volume
+    awful.key({ MOD }, "F1",
+              function() x.cmd.volume("mute") end,
+              { description = "mute", group = "system" }),
+
+    awful.key({ MOD }, "F2",
+              function() x.cmd.volume("down") end,
+              { description = "volume down", group = "system" }),
+
+    awful.key({ MOD }, "F3",
+              function() x.cmd.volume("up") end,
+              { description = "volume up", group = "system" }),
+
+
     awful.key({ MOD, "Shift" }, "p",
               function() x.cmd.ide(x.qube.dev) end,
               { description = x.qube.dev .. " IDE", group = "launcher" }),

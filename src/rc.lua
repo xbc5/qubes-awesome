@@ -1,6 +1,7 @@
 -- If LuaRocks is installed, make sure that packages installed through it are
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
+require("x.rule")
 require("x.fuzzy_launcher")
 
 local x = {
@@ -20,8 +21,7 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 local naughty = require("naughty")
 
-local modkey = "Mod4"
-
+x.tag.init()
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -77,7 +77,6 @@ screen.connect_signal("property::geometry", set_wallpaper)
 -- per screen config
 awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
-    x.tag.init(s)
     x.toolbar.widget(s)
 end)
 

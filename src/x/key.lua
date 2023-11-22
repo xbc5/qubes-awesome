@@ -119,6 +119,14 @@ function M.global()
               function() x.cmd.volume("up") end,
               { description = "volume up", group = "system" }),
 
+    -- scratch
+    awful.key({ MOD }, "y",
+              function() x.scratch.toggle_matrix(x.cmd.matrix) end,
+              { description = "matrix", group = "scratch" }),
+
+    awful.key({ MOD }, ",",
+              function() x.scratch.toggle_notes(x.cmd.notes) end,
+              { description = "notes", group = "scratch" }),
 
     awful.key({ MOD, "Shift" }, "p",
               function() x.cmd.ide(x.qube.dev) end,
@@ -127,10 +135,6 @@ function M.global()
     awful.key({ MOD, "Shift" }, "i",
               function() x.cmd.ide(x.qube.dev_s) end,
               { description = x.qube.dev_s .. " IDE", group = "launcher" }),
-
-    awful.key({ MOD }, ",",
-              function() x.scratch.toggle_notes(x.cmd.notes) end,
-              { description = "show notes", group = "launcher" }),
 
     awful.key({ MOD, "Shift" }, "s",
               hotkeys_popup.show_help,

@@ -19,7 +19,10 @@ local M = {
     class = "ide$",
   },
   librewolf = {
-    class = "librewolf-.+$"  -- librewolf includes the profile name
+    class = "librewolf[-].+$"  -- librewolf includes the profile name
+  },
+  matrix_client = {
+    class = "matrix:librewolf-default",
   },
   notes = {
     class = "notes:Emacs",
@@ -30,6 +33,7 @@ local M = {
     }
   },
 }
+
 
 function M.join(qube, app)
   return qube .. ":" .. app

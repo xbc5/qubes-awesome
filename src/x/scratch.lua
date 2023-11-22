@@ -5,12 +5,12 @@ local x = {
 }
 
 local notes = x.xprop.notes
+local matrixc = x.xprop.matrix_client
 
 local M = {
-  keys = { notes = notes.class }, -- used as a cache key
   clients = {}, -- a cache to hold active clients for easy searching
   rules = {
-    modals = { class = { notes.class } },
+    modals = { class = { notes.class, matrixc.class } },
   },
 }
 
@@ -29,6 +29,7 @@ function M.add(c)
     x.notify.client_error(c.class .. " already exists")
     return
   end
+  x.notify.test("add " .. c.class)
   M.clients[c.class] = c
 end
 
@@ -36,6 +37,7 @@ end
 -- @param c An Awesome client.
 function M.del(c)
   M.clients[c.class] = nil
+  x.notify.test("delete " .. c.class)
 end
 
 -- Provide the class name of the window you wish to see.
@@ -46,10 +48,12 @@ end
 --  async or not, it doesn't matter: fn() (no args).
 function M.toggle(key, fn)
   local c = M.get(key)
-  if c then
+  if c ~= nil then
     c.hidden = not c.hidden
-    client.focus = c
-    c:raise()
+    if not c.hidden then
+      client.focus = c
+      c:raise()
+    end
   elseif fn then
     fn()
   end
@@ -59,7 +63,14 @@ end
 -- @param fn The [optional] function that starts the command, client or application --
 --  async or not, it doesn't matter: fn() (no args).
 function M.toggle_notes(fn)
-  M.toggle(M.keys.notes, fn)
+  M.toggle(notes.class, fn)
+end
+
+-- Toggle the matrix scratch.
+-- @param fn The [optional] function that starts the command, client or application --
+--  async or not, it doesn't matter: fn() (no args).
+function M.toggle_matrix(fn)
+  M.toggle(matrixc.class, fn)
 end
 
 client.connect_signal("manage", function(c)

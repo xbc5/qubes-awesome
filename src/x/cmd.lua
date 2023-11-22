@@ -25,6 +25,14 @@ function M.notes(cb)
   end)
 end
 
+-- Start matrix. If successful, it calls the callback.
+-- @param cb The callback: cb() -- no args; called when exit_code == 0.
+function M.matrix(cb)
+  M.async("matrix --wait", function(ok)
+    if ok and cb then cb() end
+  end)
+end
+
 function M.ide(qube, cb)
   M.async("ide " ..  qube, function(ok)
     if ok and cb then cb() end

@@ -1,7 +1,3 @@
-local x = {
-  qube = require("x.qube"),
-}
-
 local M = {
   -- qubes
   daily = {

@@ -15,7 +15,7 @@ local M = {
   },
 
   -- apps
-  xide = {
+  ide = {
     class_p = "ide$",
   },
   librewolf = {
@@ -32,18 +32,23 @@ local M = {
   },
 }
 
-
+-- Join a qube name and an app to form an X class prop.
+-- @return A string: e.g. qube:app-name
 function M.join(qube, app)
   return qube .. ":" .. app
 end
 
-function M.browser(qube)
+-- A rule that matches all browsers
+-- @return An Awesome rule: { class = {...} }
+function M.browser_rule(qube)
   local c = M.librewolf.class_p
   return { class = { M.join(qube, c) } }
 end
 
-function M.ide(qube)
-  local c = M.xide.class_p
+-- A rule that matches the IDE
+-- @return An Awesome rule: { class = {...} }
+function M.ide_rule(qube)
+  local c = M.ide.class_p
   return { class = { M.join(qube, c) } }
 end
 

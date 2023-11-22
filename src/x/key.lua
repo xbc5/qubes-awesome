@@ -129,7 +129,7 @@ function M.global()
               { description = x.qube.dev_s .. " IDE", group = "launcher" }),
 
     awful.key({ MOD }, ",",
-              function() x.scratch.toggle(x.scratch.keys.notes, x.cmd.notes) end,
+              function() x.scratch.toggle_notes(x.cmd.notes) end,
               { description = "show notes", group = "launcher" }),
 
     awful.key({ MOD, "Shift" }, "s",

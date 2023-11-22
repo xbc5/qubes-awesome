@@ -7,7 +7,7 @@ local x = {
 local notes = x.xprop.notes
 
 local M = {
-  keys = { notes = notes.class },
+  keys = { notes = notes.class }, -- used as a cache key
   clients = {}, -- a cache to hold active clients for easy searching
   rules = {
     modals = { class = { notes.class } },
@@ -53,6 +53,13 @@ function M.toggle(key, fn)
   elseif fn then
     fn()
   end
+end
+
+-- Toggle the notes scratch.
+-- @param fn The [optional] function that starts the command, client or application --
+--  async or not, it doesn't matter: fn() (no args).
+function M.toggle_notes(fn)
+  M.toggle(M.keys.notes, fn)
 end
 
 client.connect_signal("manage", function(c)

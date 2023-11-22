@@ -39,6 +39,15 @@ function M.ide(qube, cb)
   end)
 end
 
+-- Start a 'developer console' on a qube, or Dom0.
+-- @param domain [OPTIONAL] A qube name, or Dom0.
+-- @param cb The callback: cb() -- no args; called when exit_code == 0.
+function M.dev_console(domain, cb)
+  M.async("developer-console " .. domain, function(ok)
+    if ok and cb then cb() end
+  end)
+end
+
 -- Control the volume.
 -- @param cmd Up, down, or mute.
 -- @param cb The callback: cb() -- no args; called when exit_code == 0.

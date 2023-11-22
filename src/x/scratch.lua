@@ -29,7 +29,6 @@ function M.add(c)
     x.notify.client_error(c.class .. " already exists")
     return
   end
-  x.notify.test("add " .. c.class)
   M.clients[c.class] = c
 end
 
@@ -37,7 +36,6 @@ end
 -- @param c An Awesome client.
 function M.del(c)
   M.clients[c.class] = nil
-  x.notify.test("delete " .. c.class)
 end
 
 -- Provide the class name of the window you wish to see.

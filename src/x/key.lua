@@ -37,6 +37,10 @@ function M.client()
   if M._client ~= nil then return M._client end
 
   M._client = gears.table.join(
+    awful.key({ MOD }, "Return",
+              function(c) x.cmd.dev_console(c.qubes_vmname) end,
+              { description = "contextual developer console", group = "launcher" }),
+
     awful.key({ MOD, "Shift" }, "f",
               function(c) toggle_fullscreen(c) end,
               { description = "toggle fullscreen", group = "client" }),
@@ -49,7 +53,7 @@ function M.client()
               function(c) c.floating = not c.floating end,
               { description = "toggle floating", group = "client" }),
 
-    awful.key({ MOD }, "Return",
+    awful.key({ MOD, "Alt" }, "Return",
               function(c) awful.client.setmaster(c) end,
               { description = "move to master", group = "client" }),
 

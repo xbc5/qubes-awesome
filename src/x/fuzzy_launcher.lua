@@ -2,7 +2,7 @@ local awful = require("awful")
 local xprop = require("x.xprop")
 
 local M = {
-  rules = { class = { xprop.rofi.class.any } }
+  rules = { class = { xprop.rofi.class_p } }
 }
 
 client.connect_signal("manage", function(c)

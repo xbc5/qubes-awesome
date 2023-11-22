@@ -5,7 +5,7 @@ local x = {
 }
 
 local notes = x.xprop.notes
-local matrixc = x.xprop.matrix_client
+local matrixc = x.xprop.matrix_c
 
 local M = {
   clients = {}, -- a cache to hold active clients for easy searching

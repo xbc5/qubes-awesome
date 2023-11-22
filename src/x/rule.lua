@@ -23,19 +23,19 @@ awful.rules.rules = {
     },
 
     -- dev-s
-    { rule = { class = xp.dev_s.class },
+    { rule = { class = xp.dev_s.class_p },
       properties = { tag = x.tag.get(x.tag.name.dev_s) }},
 
     -- dev:e
-    { rule_any = xp.ide(xp.dev.class),
+    { rule_any = xp.ide(xp.dev.class_p),
       properties = { tag = x.tag.get(x.tag.name.dev_e) }},
 
     -- dev:b
-    { rule_any = xp.browser(xp.dev.class), -- all browsers
+    { rule_any = xp.browser(xp.dev.class_p), -- all browsers
       properties = { tag = x.tag.get(x.tag.name.dev_b) }},
 
     -- daily
-    { rule_any = xp.browser(xp.daily.class), -- all browsers
+    { rule_any = xp.browser(xp.daily.class_p), -- all browsers
       properties = { tag = x.tag.get(x.tag.name.daily) }},
 
     -- Floating clients.

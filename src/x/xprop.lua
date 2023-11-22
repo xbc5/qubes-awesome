@@ -5,32 +5,30 @@ local x = {
 local M = {
   -- qubes
   daily = {
-    class = "^daily",
+    class_p = "^daily",
   },
   dev = {
-    class = "^dev",
+    class_p = "^dev",
   },
   dev_s = {
-    class = "^dev[-]s", -- '-' does not match on its own
+    class_p = "^dev[-]s", -- '-' does not match on its own
   },
 
   -- apps
   xide = {
-    class = "ide$",
+    class_p = "ide$",
   },
   librewolf = {
-    class = "librewolf[-].+$"  -- librewolf includes the profile name
+    class_p = "librewolf[-].+$"  -- librewolf includes the profile name
   },
-  matrix_client = {
+  matrix_c = {
     class = "matrix:librewolf-default",
   },
   notes = {
     class = "notes:Emacs",
   },
   rofi = {
-    class = {
-      any = "[rR]ofi$", -- [:^][rR]ofi$ doesn't match "rofi" (i.e. dom0)
-    }
+    class_p = "[rR]ofi$", -- [:^][rR]ofi$ doesn't match "rofi" (i.e. dom0)
   },
 }
 
@@ -40,12 +38,12 @@ function M.join(qube, app)
 end
 
 function M.browser(qube)
-  local c = M.librewolf.class
+  local c = M.librewolf.class_p
   return { class = { M.join(qube, c) } }
 end
 
 function M.ide(qube)
-  local c = M.xide.class
+  local c = M.xide.class_p
   return { class = { M.join(qube, c) } }
 end
 

@@ -11,6 +11,10 @@ local M = {
   },
 
   -- apps
+  dev_console = {
+    class   =    "developer-console",
+    class_p = ".+:developer[-]console$",
+  },
   ide = {
     class_p = "ide$",
   },
@@ -33,6 +37,14 @@ local M = {
 function M.join(qube, app)
   return qube .. ":" .. app
 end
+
+-- A pattern rule that matches the developer console for any domain.
+-- @return An Awesome rule: { class = {...} }
+function M.dev_console_rulep()
+  local c = M.dev_console.class_p
+  return { class = { c } }
+end
+
 
 -- A rule that matches all browsers
 -- @return An Awesome rule: { class = {...} }

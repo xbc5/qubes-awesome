@@ -5,12 +5,15 @@ local x = {
 }
 
 local notes = x.xprop.notes
+local dev_console = x.xprop.dev_console
 local matrixc = x.xprop.matrix_c
 
 local M = {
   clients = {}, -- a cache to hold active clients for easy searching
+  xrole = { modal = "scratch:modal", dev_console = "scratch:dev-console" },
   rules = {
     modals = { class = { notes.class, matrixc.class } },
+    dev_console = x.xprop.dev_console_rulep(), -- {class={pattern}}
   },
 }
 
@@ -71,27 +74,40 @@ function M.toggle_matrix(fn)
   M.toggle(matrixc.class, fn)
 end
 
+function M.toggle_dev_console(domain, fn)
+  M.toggle(dev_console.class, fn)
+end
+
+function M.create(c)
+  c.floating = true
+  c.ontop = true
+  c.above = true
+  c.sticky = true
+  c.skip_taskbar = true
+  c.hidden = false -- on creation
+  c.screen = awful.screen.focused()
+  client.focus = c
+  c:raise()
+  M.add(c)
+end
+
 client.connect_signal("manage", function(c)
-  if awful.rules.match_any(c, M.rules.modals ) then
-    c.xrole = "scratch:modal"
-    c.floating = true
-    c.ontop = true
-    c.above = true
-    c.sticky = true
-    c.skip_taskbar = true
-    c.hidden = false -- on creation
-    c.screen = awful.screen.focused()
-
+  if awful.rules.match_any(c, M.rules.modals) then
+    c.xrole = M.xrole.modal
     c.maximized = true
-    client.focus = c
-    c:raise()
-
-    M.add(c)
+    M.create(c)
+  elseif awful.rules.match_any(c, M.rules.dev_console) then
+    x.notify.test("add: " .. c.qubes_vmname)
+    c.xrole = M.xrole.dev_console
+    awful.placement.top(c)
+    awful.placement.maximize_horizontally(c)
+    M.create(c)
   end
 end)
 
 client.connect_signal("unmanage", function(c)
-  if c.xrole == "scratch:modal" then
+  if c.xrole == M.xrole.modal or c.xrole == M.xrole.dev_console then
+    x.notify.test("delete: " .. c.xrole)
     M.del(c)
   end
 end)

@@ -18,7 +18,7 @@ local MetaScratch = { __index = Scratch }
 function Scratch.new(launcher) -- a . means "don't use"
   local self = setmetatable({}, MetaScratch)
   self.c = nil
-  self.launch = launcher
+  self._launch = launcher
   self.launched = false
   self.locked = false
   return self
@@ -55,20 +55,18 @@ function Scratch:focus()
   self.c:raise()
 end
 
-function Scratch:toggle()
-  -- it's possible that the user spams a key while waiting for a qube to start
-  if self.locked then return end
+function Scratch:hide()
+  self.c.hidden = true
+end
 
-  if not self.launched then -- makes app a singleton
-    self.locked = true
-    self.launch(function(ok)
-      self.launched = ok
-      self.locked = false
-    end)
-  else
-    self.c.hidden = not self.c.hidden
-    if not self.c.hidden then self:focus() end
-  end
+function Scratch:show()
+  self.c.hidden = false
+  self:focus()
+end
+
+function Scratch:toggle()
+  self.c.hidden = not self.c.hidden
+  if not self.c.hidden then self:focus() end
 end
 
 local Manager = {}
@@ -76,31 +74,79 @@ local MetaManager = { __index = Manager }
 
 function Manager.new()
   local self = setmetatable({}, MetaManager)
-  self.modals = {}
-  self.dev_consoles = {}
+  self.modal = {}
+  self.dev_console = {}
+  self.kinds = {
+    [notes.class] = "modal",
+    [matrixc.class] = "modal",
+    [dev_console.class] = "dev_console",
+  }
   return self
 end
 
-function Manager:add(key)
-  if M.has(c.class) then
-    x.notify.client_error(c.class .. " already exists")
-    return
+function Manager:has(key, kind)
+  return self[kind][key] ~= nil
+end
+
+function Manager:get(key, kind)
+  return self[kind][key]
+end
+
+-- Hide everything except one item.
+-- @param kind The scratch kind.
+-- @param except_key The client to skip; can be nil.
+function Manager:hide_all_except(kind, key)
+  for k, item in pairs(self[kind]) do
+    if k ~= key then item:hide() end -- everything else
   end
-  M.clients[c.class] = c
 end
 
-function Manager:spawn_dev_console(domain)
-  self:add(dev_console.class, x.cmd)
+function Manager:spawn(key, kind, launch)
+  -- if exists toggle; otherwise launch
+  if self:has(key, kind) then
+    self:hide_all_except(kind, key)
+    self[kind][key]:toggle()
+  else
+    launch(function(ok)
+      self.locked[kind][key]
+      if ok then self:hide_all_except(kind, key) end
+    end)
+  end
 end
 
-function Manager:spawn_notes()
-  self:add(dev_console.class)
+-- Tracking a client means to cache and manage it. You can track multiple of each kind, as
+-- long as their key differs (i.e. their X.class name). This means multiple modals; or multiple
+-- dev-consoles. If that key already exists, it kills that client and returns false.
+-- @return return false if the exact client already exists; true otherwise.
+function Manager:track(c)
+  -- track if not tracking; otherwise kill
+  local kind = self.kinds[c.class]
+  local key = c.class
+  if not self:has(key, kind) then
+    self[kind][key] = c
+    return true
+  end
+  c:kill()
+  return false
 end
 
-function Manager:spawn_matrix()
-
+function Manager:toggle_dev_console(domain)
+  local key = dev_console.class
+  local kind = self.kinds[key]
+  self:spawn(key, kind, function(cb) x.cmd.dev_console(domain, cb) end)
 end
 
+function Manager:toggle_notes()
+  local key = notes.class
+  local kind = self.kinds[key]
+  self:spawn(key, kind, x.cmd.notes)
+end
+
+function Manager:toggle_matrix()
+  local key = matrixc.class
+  local kind = self.kinds[key]
+  self:spawn(key, kind, x.cmd.matrix)
+end
 
 local M = {
   clients = {}, -- a cache to hold active clients for easy searching

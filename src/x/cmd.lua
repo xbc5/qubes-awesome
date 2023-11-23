@@ -20,41 +20,31 @@ end
 -- Start notes. If successful, it calls the callback.
 -- @param cb The callback: cb() -- no args; called when exit_code == 0.
 function M.notes(cb)
-  M.async("notes --wait", function(ok)
-    if ok and cb then cb() end
-  end)
+  M.async("notes --wait", cb)
 end
 
 -- Start matrix. If successful, it calls the callback.
 -- @param cb The callback: cb() -- no args; called when exit_code == 0.
 function M.matrix(cb)
-  M.async("matrix --wait", function(ok)
-    if ok and cb then cb() end
-  end)
+  M.async("matrix --wait", cb)
 end
 
 function M.ide(qube, cb)
-  M.async("ide " ..  qube, function(ok)
-    if ok and cb then cb() end
-  end)
+  M.async("ide " ..  qube, cb)
 end
 
 -- Start a 'developer console' on a qube, or Dom0.
 -- @param domain [OPTIONAL] A qube name, or Dom0.
 -- @param cb The callback: cb() -- no args; called when exit_code == 0.
 function M.dev_console(domain, cb)
-  M.async("developer-console " .. domain, function(ok)
-    if ok and cb then cb() end
-  end)
+  M.async("developer-console " .. domain, cb)
 end
 
 -- Control the volume.
 -- @param cmd Up, down, or mute.
 -- @param cb The callback: cb() -- no args; called when exit_code == 0.
 function M.volume(cmd, cb)
-  M.async("volume " .. cmd, function(ok)
-    if ok and cb then cb() end
-  end)
+  M.async("volume " .. cmd, cb)
 end
 
 return M

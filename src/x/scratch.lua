@@ -2,11 +2,105 @@ local awful = require("awful")
 local x = {
   xprop = require("x.xprop"),
   notify = require("x.notify"),
+  cmd = require("x.cmd"),
 }
 
 local notes = x.xprop.notes
 local dev_console = x.xprop.dev_console
 local matrixc = x.xprop.matrix_c
+
+local Scratch = {}
+local MetaScratch = { __index = Scratch }
+
+-- Create a new Scratch instance
+-- @param launcher A function that accepts a callback with a single arg:
+--  launcher(fn(ok)): it calls fn after launch success or fail, as indicated by ok.
+function Scratch.new(launcher) -- a . means "don't use"
+  local self = setmetatable({}, MetaScratch)
+  self.c = nil
+  self.launch = launcher
+  self.launched = false
+  self.locked = false
+  return self
+end
+
+-- Add a client only if it doesn't exist. Use this in a manage signal.
+-- If there is already a client, it will kill the new client. The toggle
+-- method is careful to not enable
+-- @return boolean: false if the client already exists; true otherwise.
+function Scratch:add(c)
+  if self.c ~= nil then
+    x.notify.client_error("Client exists: " .. c.class)
+    c:kill()
+    return false
+  end
+
+  c.floating = true
+  c.ontop = true
+  c.above = true
+  c.sticky = true
+  c.skip_taskbar = true
+  c.hidden = false
+  c.screen = awful.screen.focused()
+  self.c = c
+
+  self:focus()
+
+  return true
+end
+
+-- Focus the client.
+function Scratch:focus()
+  client.focus = self.c
+  self.c:raise()
+end
+
+function Scratch:toggle()
+  -- it's possible that the user spams a key while waiting for a qube to start
+  if self.locked then return end
+
+  if not self.launched then -- makes app a singleton
+    self.locked = true
+    self.launch(function(ok)
+      self.launched = ok
+      self.locked = false
+    end)
+  else
+    self.c.hidden = not self.c.hidden
+    if not self.c.hidden then self:focus() end
+  end
+end
+
+local Manager = {}
+local MetaManager = { __index = Manager }
+
+function Manager.new()
+  local self = setmetatable({}, MetaManager)
+  self.modals = {}
+  self.dev_consoles = {}
+  return self
+end
+
+function Manager:add(key)
+  if M.has(c.class) then
+    x.notify.client_error(c.class .. " already exists")
+    return
+  end
+  M.clients[c.class] = c
+end
+
+function Manager:spawn_dev_console(domain)
+  self:add(dev_console.class, x.cmd)
+end
+
+function Manager:spawn_notes()
+  self:add(dev_console.class)
+end
+
+function Manager:spawn_matrix()
+
+end
+
 
 local M = {
   clients = {}, -- a cache to hold active clients for easy searching

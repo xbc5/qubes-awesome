@@ -218,4 +218,4 @@ function Manager:toggle_matrix()
   self:toggle(key, self.kind.modal, x.cmd.matrix)
 end
 
-return M
+return Manager.new()

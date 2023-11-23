@@ -38,7 +38,7 @@ function M.client()
 
   M._client = gears.table.join(
     awful.key({ MOD }, "Return",
-              function(c) x.cmd.dev_console(c.qubes_vmname) end,
+              function(c) x.scratch:toggle_dev_console(c.qubes_vmname) end,
               { description = "contextual developer console", group = "launcher" }),
 
     awful.key({ MOD, "Shift" }, "f",
@@ -125,11 +125,11 @@ function M.global()
 
     -- scratch
     awful.key({ MOD }, "y",
-              function() x.scratch.toggle_matrix(x.cmd.matrix) end,
+              function() x.scratch:toggle_matrix() end,
               { description = "matrix", group = "scratch" }),
 
     awful.key({ MOD }, ",",
-              function() x.scratch.toggle_notes(x.cmd.notes) end,
+              function() x.scratch:toggle_notes() end,
               { description = "notes", group = "scratch" }),
 
     awful.key({ MOD, "Shift" }, "p",

@@ -28,6 +28,8 @@ local function decorate(c)
   c.hidden = true
   c.screen = awful.screen.focused()
 
+  c.xscratch = true -- used for filtering
+
   if awful.rules.match_any(c, x.xprop.modal_rulep()) then
     c.xkind = "modal"  -- for scan+track
     c.xshutdown = true
@@ -61,7 +63,7 @@ local function decorate(c)
     end
   end
 
-  function x:xtoggle()
+  function c.xtoggle()
     c.hidden = not c.hidden
     if not c.hidden then
       hide_all_except(c)
@@ -82,10 +84,11 @@ function Manager.new()
 end
 
 function Manager:scan()
-  local clients = x.util.filter(client.get(), function(c)
-    return awful.rules.match_any(c, x.xprop.scratch_rulep())
-  end)
-  for _, c in pairs(clients) do decorate(c) end
+  for _, c in pairs(client.get()) do
+    if self:is_scratch(c) then
+      decorate(c)
+    end
+  end
 end
 
 function Manager:is_scratch(c)
@@ -105,10 +108,14 @@ end
 -- @param class The X.class name.
 -- @return An Awesome client.
 function Manager:get(class, first)
-  local c = x.util.filter(client.get(), function(c)
-    return c.class == class
-  end)
-  if c and first then return c[1] else return c end
+  local chosen = {}
+  for _, c in pairs(client.get()) do
+    if c.xscratch and c.class == class then
+      chosen = c
+      break
+    end
+  end
+  return chosen
 end
 
 

@@ -13,7 +13,7 @@ local function hide_all_except(c)
   for _, client in pairs(client.get()) do
     -- hide same kind, but skip c
     if client.xkind == c.xkind and not rawequal(c, client) then
-      c.xhide()
+      client.xhide()
     end
   end
 end
@@ -31,6 +31,7 @@ local function decorate(c)
   c.skip_taskbar = true
   c.hidden = true
   c.screen = awful.screen.focused()
+  c.hidden = true
 
   c.xscratch = true -- used for filtering
 
@@ -68,11 +69,7 @@ local function decorate(c)
   end
 
   function c.xtoggle()
-    c.hidden = not c.hidden
-    if not c.hidden then
-      hide_all_except(c)
-      c.xfocus()
-    end
+    if c.hidden then c.xshow() else c.xhide() end
   end
 end
 

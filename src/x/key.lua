@@ -221,7 +221,7 @@ function M.global()
               { description = "show the menubar", group = "launcher" }),
 
     awful.key({ MOD }, "Escape",
-              function() x.scratch:hide_all() end,
+              function() x.scratch:scan() end,
               { description = "reset views to a sane default", group = "awesome" }))
 
     return M._global

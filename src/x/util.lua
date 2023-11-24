@@ -1,3 +1,5 @@
+local x = { notify = require("x.notify") }
+
 local M = {}
 
 -- Shallow copy a table.
@@ -21,6 +23,24 @@ function M.map(t, fn)
     if v ~= nil then nt[k] = v end
   end
   return nt
+end
+
+function M.filter(t, fn)
+  local nt = {}
+  for k, v in pairs(t) do
+    x.notify.test(v.scratch)
+    v = fn(v, k)
+    if v == true then nt[k] = v end
+  end
+  return nt
+end
+
+-- Get all clients that have a particular key set to value.
+-- @param key The key -- e.g. modal; class.
+-- @param value -- e.g. true, "dev:firefox"
+function M.get_clients(key, value)
+  x.notify.test("getting ")
+  return M.filter(client.get(), function(c) return c[key] == value end)
 end
 
 return M

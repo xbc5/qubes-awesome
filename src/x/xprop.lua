@@ -49,6 +49,17 @@ function M.dev_console_rulep()
   return { class = { c } }
 end
 
+-- A pattern rule that matches modals.
+-- @return An Awesome rule: { class = {...} }
+function M.modal_rulep()
+  return { class = { M.matrix_c.class_p, M.notes.class_p } }
+end
+
+-- A pattern rule that matches scratch clients.
+-- @return An Awesome rule: { class = {...} }
+function M.scratch_rulep()
+  return { class = { M.matrix_c.class_p, M.notes.class_p, M.dev_console.class_p } }
+end
 
 -- A rule that matches all browsers
 -- @return An Awesome rule: { class = {...} }

@@ -18,7 +18,9 @@ local function hide_all_except(c)
   end
 end
 
-
+-- Add xutility functions and configuration properties to a client.
+-- If c.xscratch is true, then it's decorated.
+-- @return nil
 local function decorate(c)
   if c.xscratch == true then return end
 
@@ -77,19 +79,16 @@ end
 local Manager = {}
 local MetaManager = { __index = Manager }
 
--- Manages clients by rejecting duplicates, tracking those active,
--- ensuring only one within a group (kind) is visible at a time. This
--- is an unenforced singleton that manages dumb Scratch clients.
 function Manager.new()
   local self = setmetatable({}, MetaManager)
   return self -- self (huehue)
 end
 
+-- Scan and decorate all active scratch windows -- useful after refreshing Awesome.
+-- @return nil
 function Manager:scan()
   for _, c in pairs(client.get()) do
-    if self:is_scratch(c) then
-      decorate(c)
-    end
+    if self:is_scratch(c) then decorate(c) end
   end
 end
 
@@ -124,11 +123,7 @@ end
 -- Launch a client if it doesn't exist; toggle its visibility
 -- if it does.
 -- @param class the literal class name (not a pattern)
--- @param launcher A function for starting the client:
---   e.g. function(fn) ... end
---   When the command completes, it should call fn(ok), where ok
---   is exit_code == 0. In other words: the function that you pass in
---   accepts a callback with an 'ok' argument.
+-- @param launcher A function for starting the client: fn(). Preferrably async.
 -- @return nil
 function Manager:toggle(class, launcher)
   -- Client exists, use it (toggle it).
@@ -141,21 +136,14 @@ function Manager:toggle(class, launcher)
   launcher()
 end
 
-function Manager:validate_spec(spec)
-  if spec.class == nil then error("class not set for xprop spec") end
-  if spec.class_p == nil then error("class_p not set for xprop spec") end
-  return spec
-end
-
 -- Start a developer console.
 -- @param domain The name of the domain to run it on: e.g. dom0, foo.
 -- @return nil
 function Manager:toggle_dev_console(domain)
-  local spec = self:validate_spec(x.xprop.dev_console)
-  -- we use domain:app for key so that we can toggle between
+  -- we use domain:app so that we can toggle between
   -- consoles on different domains.
   self:toggle(
-    spec.full_class(domain), -- provides domain:app
+    x.xprop.dev_console.full_class(domain), -- provides domain:app
     function(cb)
       x.cmd.dev_console(domain, cb)
     end)
@@ -164,15 +152,13 @@ end
 -- Start the notes application.
 -- @return nil
 function Manager:toggle_notes()
-  local spec = self:validate_spec(x.xprop.notes)
-  self:toggle(spec.class, x.cmd.notes)
+  self:toggle(x.xprop.notes.class, x.cmd.notes)
 end
 
 -- Start the matrix client.
 -- @return nil
 function Manager:toggle_matrix()
-  local spec = self:validate_spec(x.xprop.matrix_c)
-  self:toggle(spec.class, x.cmd.matrix)
+  self:toggle(x.xprop.matrix_c.class, x.cmd.matrix)
 end
 
 local manager = Manager.new()

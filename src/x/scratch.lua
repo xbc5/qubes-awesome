@@ -4,6 +4,7 @@ local x = {
   notify = require("x.notify"),
   cmd = require("x.cmd"),
   util = require("x.util"),
+  client = require("x.client"),
 }
 
 -- Hide everything of the same kind except one item.
@@ -41,6 +42,7 @@ local function decorate(c)
     c.maximized = true
   elseif awful.rules.match_any(c, x.xprop.dev_console_rulep()) then
     c.xkind = "dev_console" -- for scan+track
+    x.client.set_rel_height(c, 0.75)
     awful.placement.top(c)
     awful.placement.maximize_horizontally(c)
   else

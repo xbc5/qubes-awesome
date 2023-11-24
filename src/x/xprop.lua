@@ -22,10 +22,12 @@ local M = {
     class_p = "librewolf[-].+$"  -- librewolf includes the profile name
   },
   matrix_c = {
-    class = "matrix:librewolf-default",
+    class   = "matrix:librewolf-default",
+    class_p = "^matrix:librewolf[-]default$",
   },
   notes = {
-    class = "notes:Emacs",
+    class   = "notes:Emacs",
+    class_p = "^notes:Emacs$",
   },
   rofi = {
     class_p = "[rR]ofi$", -- [:^][rR]ofi$ doesn't match "rofi" (i.e. dom0)

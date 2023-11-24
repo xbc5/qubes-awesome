@@ -5,10 +5,6 @@ local x = {
   cmd = require("x.cmd"),
 }
 
-local notes = x.xprop.notes
-local dev_console = x.xprop.dev_console
-local matrixc = x.xprop.matrix_c
-
 local Scratch = {}
 local MetaScratch = { __index = Scratch }
 
@@ -132,14 +128,17 @@ end
 
 -- Launch a client if it doesn't exist; toggle its visibility
 -- if it does.
--- @param key The client to skip; can be nil.
+-- @param spec The xprop spec -- e.g. { class = ..., class_p = ... }
 -- @param kind The scratch kind.
 -- @param launch A launcher function for starting the client:
 --   e.g. function(fn) ... end
 --   When the command completes, it should call fn(ok), where ok
 --   is exit_code == 0. In other words: the function that you pass in
 --   accepts a callback with an 'ok' argument.
-function Manager:toggle(key, kind, launch)
+function Manager:toggle(spec, kind, launch)
+  local key = spec.class
+  local pat = spec.class_p
+
   -- Client exists, use it (toggle it).
   if self:has(key, kind) then
     self:hide_all_except(kind, key)
@@ -151,7 +150,8 @@ function Manager:toggle(key, kind, launch)
 
   -- stop tracking the client after it's closed
   local function delete_if_matches(c)
-    if c.class == key then
+    if string.match(c.class, pat) then
+      x.notify.test("untracking client: " .. c.class)
       client.disconnect_signal("unmanage", delete_if_matches)
       self:del(key, kind)
     end
@@ -160,7 +160,9 @@ function Manager:toggle(key, kind, launch)
 
   -- track the client when one (with a matching class) is opened
   local function track_if_matches(c)
-    if c.class == key then
+    x.notify.test("new client: " .. c.class)
+    if string.match(c.class, pat) then
+      x.notify.test("tracking client: " .. c.class)
       client.disconnect_signal("manage", track_if_matches)
       self:track(c, key, kind)
     end
@@ -196,26 +198,40 @@ function Manager:track(c, key, kind)
   return false
 end
 
+function Manager:validate_spec(spec)
+  if spec.class == nil then error("class not set for xprop spec") end
+  if spec.class_p == nil then error("class_p not set for xprop spec") end
+  return spec
+end
+
 -- Start a developer console.
 -- @param domain The name of the domain to run it on: e.g. dom0, foo.
 -- @return nil
 function Manager:toggle_dev_console(domain)
-  local key = dev_console.class
-  self:toggle(key, self.kind.dev_console, function(cb) x.cmd.dev_console(domain, cb) end)
+  self:toggle(
+    self:validate_spec(x.xprop.dev_console),
+    self.kind.dev_console,
+    function(cb)
+      x.cmd.dev_console(domain, cb)
+    end)
 end
 
 -- Start the notes application.
 -- @return nil
 function Manager:toggle_notes()
-  local key = notes.class
-  self:toggle(key, self.kind.modal, x.cmd.notes)
+  self:toggle(
+    self:validate_spec(x.xprop.notes),
+    self.kind.modal,
+    x.cmd.notes)
 end
 
 -- Start the matrix client.
 -- @return nil
 function Manager:toggle_matrix()
-  local key = matrixc.class
-  self:toggle(key, self.kind.modal, x.cmd.matrix)
+  self:toggle(
+    self:validate_spec(x.xprop.matrix_c),
+    self.kind.modal,
+    x.cmd.matrix)
 end
 
 return Manager.new()

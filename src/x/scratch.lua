@@ -6,6 +6,19 @@ local x = {
   util = require("x.util"),
 }
 
+-- Hide everything of the same kind except one item.
+-- @param c An Awesome clent.
+-- @return nil.
+local function hide_all_except(c)
+  for _, client in pairs(client.get()) do
+    -- hide same kind, but skip c
+    if client.xkind == c.xkind and not rawequal(c, client) then
+      c.xhide()
+    end
+  end
+end
+
+
 local function decorate(c)
   c.floating = true
   c.ontop = true
@@ -15,12 +28,12 @@ local function decorate(c)
   c.hidden = true
   c.screen = awful.screen.focused()
 
-  if awful.rule.match_any(c, x.xprop.modal_rulep()) then
+  if awful.rules.match_any(c, x.xprop.modal_rulep()) then
     c.xkind = "modal"  -- for scan+track
-    c.maximized = true
-  elseif awful.rule.match_any(c, x.xprop.dev_console_rulep()) then
-    c.xkind = "dev_console" -- for scan+track
     c.xshutdown = true
+    c.maximized = true
+  elseif awful.rules.match_any(c, x.xprop.dev_console_rulep()) then
+    c.xkind = "dev_console" -- for scan+track
     awful.placement.top(c)
     awful.placement.maximize_horizontally(c)
   else
@@ -37,6 +50,7 @@ local function decorate(c)
   end
 
   function c.xshow()
+    hide_all_except(c)
     c.hidden = false
     c.xfocus()
   end
@@ -49,7 +63,10 @@ local function decorate(c)
 
   function x:xtoggle()
     c.hidden = not c.hidden
-    if not c.hidden then c.xfocus() end
+    if not c.hidden then
+      hide_all_except(c)
+      c.xfocus()
+    end
   end
 end
 
@@ -64,27 +81,15 @@ function Manager.new()
   return self -- self (huehue)
 end
 
--- Hide everything of the same kind except one item.
--- @param c An Awesome clent.
--- @return nil.
-function Manager:hide_all_except(c)
-  for _, client in pairs(client.get()) do
-    -- hide same kind, but skip c
-    if client.xkind == c.xkind and not rawequal(c, client) then
-      c.xhide()
-    end
-  end
-end
-
 function Manager:scan()
   local clients = x.util.filter(client.get(), function(c)
-    return awful.rule.match_any(c, x.xprop.scratch_rulep())
+    return awful.rules.match_any(c, x.xprop.scratch_rulep())
   end)
   for _, c in pairs(clients) do decorate(c) end
 end
 
 function Manager:is_scratch(c)
-  return awful.rule.match_any(c, x.xprop.scratch_rulep())
+  return awful.rules.match_any(c, x.xprop.scratch_rulep())
 end
 
 -- Hide everything. Useful during startup to prevent
@@ -120,17 +125,11 @@ function Manager:toggle(class, launcher)
   -- Client exists, use it (toggle it).
   local c = self:get(class, true)
   if c then
-    self:hide_all_except(c)
     c.xtoggle()
     return
   end
 
-  launcher(function(ok)
-    if ok then
-      self:hide_all_except(c)
-      c.show()
-    end
-  end)
+  launcher()
 end
 
 function Manager:validate_spec(spec)
@@ -170,13 +169,13 @@ end
 local manager = Manager.new()
 
 client.connect_signal("unmanage", function(c)
-  if awful.rule.match_any(c, x.xprop.scratch_rulep()) then
+  if awful.rules.match_any(c, x.xprop.scratch_rulep()) then
     c.xclose()
   end
 end)
 
 client.connect_signal("manage", function(c)
-  if awful.rule.match_any(c, x.xprop.scratch_rulep()) then
+  if awful.rules.match_any(c, x.xprop.scratch_rulep()) then
     decorate(c)
     c.xshow()
   end

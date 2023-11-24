@@ -141,7 +141,9 @@ end
 
 -- Launch a client if it doesn't exist; toggle its visibility
 -- if it does.
--- @param spec The xprop spec -- e.g. { class = ..., class_p = ... }
+-- @param key Typically this is the class name, or class prop from xprop module.
+-- @param pat A pattern to match the client -- typcially this is some form of pattern
+--  derived from the X.class. This is typically the class_p property from the xprop module.
 -- @param kind The scratch kind.
 -- @param launcher A function for starting the client:
 --   e.g. function(fn) ... end
@@ -151,10 +153,7 @@ end
 -- @param shutown A boolean or a function -- non-nil means that the qube stops when
 --   app closes. If it's a function then: fn(ok, stdout, stderr)
 -- @return nil
-function Manager:toggle(spec, kind, launcher, shutdown)
-  local key = spec.class
-  local pat = spec.class_p
-
+function Manager:toggle(key, pat, kind, launcher, shutdown)
   -- Client exists, use it (toggle it).
   if self:has(key, kind) then
     self:hide_all_except(kind, key)
@@ -228,8 +227,12 @@ end
 -- @param domain The name of the domain to run it on: e.g. dom0, foo.
 -- @return nil
 function Manager:toggle_dev_console(domain)
+  local spec = self:validate_spec(x.xprop.dev_console)
+  -- we use domain:app for key so that we can toggle between
+  -- consoles on different domains.
   self:toggle(
-    self:validate_spec(x.xprop.dev_console),
+    spec.full_class(domain), -- provides domain:app
+    spec.class_p,
     self.kind.dev_console,
     function(cb)
       x.cmd.dev_console(domain, cb)
@@ -239,8 +242,10 @@ end
 -- Start the notes application.
 -- @return nil
 function Manager:toggle_notes()
+  local spec = self:validate_spec(x.xprop.notes)
   self:toggle(
-    self:validate_spec(x.xprop.notes),
+    spec.class,
+    spec.class_p,
     self.kind.modal,
     x.cmd.notes,
     true)
@@ -249,8 +254,10 @@ end
 -- Start the matrix client.
 -- @return nil
 function Manager:toggle_matrix()
+  local spec = self:validate_spec(x.xprop.matrix_c)
   self:toggle(
-    self:validate_spec(x.xprop.matrix_c),
+    spec.class,
+    spec.class_p,
     self.kind.modal,
     x.cmd.matrix,
     true)

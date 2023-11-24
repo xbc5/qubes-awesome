@@ -1,3 +1,10 @@
+-- Join a qube name and an app to form an X class prop.
+-- @return A string: e.g. qube:app-name
+function join(qube, app)
+  return qube .. ":" .. app
+end
+
+
 local M = {
   -- qubes
   daily = {
@@ -14,6 +21,7 @@ local M = {
   dev_console = {
     class   =    "developer-console",
     class_p = ".+:developer[-]console$",
+    full_class = function(domain) return join(domain, "developer-console") end,
   },
   ide = {
     class_p = "ide$",
@@ -34,12 +42,6 @@ local M = {
   },
 }
 
--- Join a qube name and an app to form an X class prop.
--- @return A string: e.g. qube:app-name
-function M.join(qube, app)
-  return qube .. ":" .. app
-end
-
 -- A pattern rule that matches the developer console for any domain.
 -- @return An Awesome rule: { class = {...} }
 function M.dev_console_rulep()
@@ -52,14 +54,14 @@ end
 -- @return An Awesome rule: { class = {...} }
 function M.browser_rule(qube)
   local c = M.librewolf.class_p
-  return { class = { M.join(qube, c) } }
+  return { class = { join(qube, c) } }
 end
 
 -- A rule that matches the IDE
 -- @return An Awesome rule: { class = {...} }
 function M.ide_rule(qube)
   local c = M.ide.class_p
-  return { class = { M.join(qube, c) } }
+  return { class = { join(qube, c) } }
 end
 
 return M

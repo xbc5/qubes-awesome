@@ -11,8 +11,12 @@ local MetaScratch = { __index = Scratch }
 -- Create a new Scratch instance
 -- @param launcher A function that accepts a callback with a single arg:
 --  launcher(fn(ok)): it calls fn after launch success or fail, as indicated by ok.
-function Scratch.new(c, kind)
+-- @param shutown A boolean or a function -- non-nil means that the qube stops when
+--   app closes. If it's a function then: fn(ok, stdout, stderr)
+function Scratch.new(c, kind, shutdown)
   local self = setmetatable({}, MetaScratch)
+  self.shutdown = shutdown
+
   c.floating = true
   c.ontop = true
   c.above = true
@@ -54,6 +58,15 @@ end
 function Scratch:show()
   self.c.hidden = false
   self:focus()
+end
+
+-- Close the client. Sometimes you want to perform some action
+-- when closing -- e.g. shutdown the qube.
+-- @return nil
+function Scratch:close()
+  if self.shutdown then
+    x.cmd.shutown(self.c.qubes_vmname, self.shutdown)
+  end
 end
 
 -- Toggle the visibility of the client, and focus it if it's visible.
@@ -130,12 +143,15 @@ end
 -- if it does.
 -- @param spec The xprop spec -- e.g. { class = ..., class_p = ... }
 -- @param kind The scratch kind.
--- @param launch A launcher function for starting the client:
+-- @param launcher A function for starting the client:
 --   e.g. function(fn) ... end
 --   When the command completes, it should call fn(ok), where ok
 --   is exit_code == 0. In other words: the function that you pass in
 --   accepts a callback with an 'ok' argument.
-function Manager:toggle(spec, kind, launch)
+-- @param shutown A boolean or a function -- non-nil means that the qube stops when
+--   app closes. If it's a function then: fn(ok, stdout, stderr)
+-- @return nil
+function Manager:toggle(spec, kind, launcher, shutdown)
   local key = spec.class
   local pat = spec.class_p
 
@@ -152,7 +168,12 @@ function Manager:toggle(spec, kind, launch)
   local function delete_if_matches(c)
     if string.match(c.class, pat) then
       client.disconnect_signal("unmanage", delete_if_matches)
-      self:del(key, kind)
+      -- don't bother waiting, if it fails it fails, the client is gone from Awesome anyway
+      local cl = self:get(key, kind)
+      if cl then
+        cl:close()
+        self:del(key, kind)
+      end
     end
   end
   client.connect_signal("unmanage", delete_if_matches)
@@ -161,13 +182,13 @@ function Manager:toggle(spec, kind, launch)
   local function track_if_matches(c)
     if string.match(c.class, pat) then
       client.disconnect_signal("manage", track_if_matches)
-      self:track(c, key, kind)
+      self:track(c, key, kind, shutdown)
     end
   end
   client.connect_signal("manage", track_if_matches) -- to get out-of-band clients
 
   -- launch it, and hide all others of the same kind if it launches successfully
-  launch(function(ok)
+  launcher(function(ok)
     if ok then
       self:hide_all_except(kind, key)
     else
@@ -184,11 +205,13 @@ end
 -- @param c An Awesome client.
 -- @param key The cache key (typically the X.class name).
 -- @param kind The group to which the client belongs.
+-- @param shutown A boolean or a function -- non-nil means that the qube stops when
+--   app closes. If it's a function then: fn(ok, stdout, stderr)
 -- @return false if the exact client already exists; true otherwise.
-function Manager:track(c, key, kind)
+function Manager:track(c, key, kind, shutdown)
   -- track if not tracking; otherwise kill
   if not self:has(key, kind) then
-    self[kind][key] = Scratch.new(c, kind) -- TODO: use inheritance
+    self[kind][key] = Scratch.new(c, kind, shutdown) -- TODO: use inheritance
     return true
   end
   c:kill()
@@ -219,7 +242,8 @@ function Manager:toggle_notes()
   self:toggle(
     self:validate_spec(x.xprop.notes),
     self.kind.modal,
-    x.cmd.notes)
+    x.cmd.notes,
+    true)
 end
 
 -- Start the matrix client.
@@ -228,7 +252,8 @@ function Manager:toggle_matrix()
   self:toggle(
     self:validate_spec(x.xprop.matrix_c),
     self.kind.modal,
-    x.cmd.matrix)
+    x.cmd.matrix,
+    true)
 end
 
 return Manager.new()

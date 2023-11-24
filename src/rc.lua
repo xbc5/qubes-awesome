@@ -11,10 +11,10 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local x = {
   client = require("x.client"), -- do this early: sets client props used by others
+  titlebar = require("x.titlebar"),
   key = require("x.key"),
   tag = require("x.tag"),
   task = require("x.task"),
-  titlebar = require("x.titlebar"),
   toolbar = require("x.toolbar"),
 }
 

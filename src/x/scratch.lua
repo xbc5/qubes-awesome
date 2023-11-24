@@ -151,7 +151,6 @@ function Manager:toggle(spec, kind, launch)
   -- stop tracking the client after it's closed
   local function delete_if_matches(c)
     if string.match(c.class, pat) then
-      x.notify.test("untracking client: " .. c.class)
       client.disconnect_signal("unmanage", delete_if_matches)
       self:del(key, kind)
     end
@@ -160,9 +159,7 @@ function Manager:toggle(spec, kind, launch)
 
   -- track the client when one (with a matching class) is opened
   local function track_if_matches(c)
-    x.notify.test("new client: " .. c.class)
     if string.match(c.class, pat) then
-      x.notify.test("tracking client: " .. c.class)
       client.disconnect_signal("manage", track_if_matches)
       self:track(c, key, kind)
     end

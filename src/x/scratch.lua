@@ -20,6 +20,8 @@ end
 
 
 local function decorate(c)
+  if c.xscratch == true then return end
+
   c.floating = true
   c.ontop = true
   c.above = true
@@ -107,8 +109,8 @@ end
 -- Get a single client.
 -- @param class The X.class name.
 -- @return An Awesome client.
-function Manager:get(class, first)
-  local chosen = {}
+function Manager:get(class)
+  local chosen = nil
   for _, c in pairs(client.get()) do
     if c.xscratch and c.class == class then
       chosen = c
@@ -130,8 +132,8 @@ end
 -- @return nil
 function Manager:toggle(class, launcher)
   -- Client exists, use it (toggle it).
-  local c = self:get(class, true)
-  if c then
+  local c = self:get(class)
+  if c ~= nil then
     c.xtoggle()
     return
   end

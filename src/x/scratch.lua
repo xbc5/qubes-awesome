@@ -139,6 +139,18 @@ function Manager:hide_all_except(kind, key)
   end
 end
 
+-- Hide everything. Useful during startup to prevent
+-- refreshes from displaying all hidden clients.
+-- @return nil
+function Manager:hide_all()
+  for _, kind in pairs(self.kind) do
+    for _, _client in pairs(self[kind]) do
+      _client:hide()
+    end
+  end
+end
+
+
 -- Launch a client if it doesn't exist; toggle its visibility
 -- if it does.
 -- @param key Typically this is the class name, or class prop from xprop module.
@@ -263,4 +275,10 @@ function Manager:toggle_matrix()
     true)
 end
 
-return Manager.new()
+local manager = Manager.new()
+
+awesome.connect_signal("startup", function()
+  manager:hide_all()
+end)
+
+return manager

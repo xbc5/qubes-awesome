@@ -218,7 +218,11 @@ function M.global()
     -- run
     awful.key({ MOD }, "p",
               function() menubar.show() end,
-              { description = "show the menubar", group = "launcher" }))
+              { description = "show the menubar", group = "launcher" }),
+
+    awful.key({ MOD }, "Escape",
+              function() x.scratch:hide_all() end,
+              { description = "reset views to a sane default", group = "awesome" }))
 
     return M._global
 end

@@ -1,7 +1,11 @@
--- Join a qube name and an app to form an X class prop.
--- @return A string: e.g. qube:app-name
-function join(qube, app)
-  return qube .. ":" .. app
+-- Join a domain name and an app to form an X class prop.
+-- @return domain A string: e.g. qube:app-name
+function join(domain, app)
+  if domain == "dom0" or domain == nil then
+    return app -- dom0 classes are just the app name
+  else
+    return domain .. ":" .. app
+  end
 end
 
 
@@ -20,7 +24,7 @@ local M = {
   -- apps
   dev_console = {
     class   =    "developer-console",
-    class_p = ".+:developer[-]console$",
+    class_p = "developer[-]console$",
     full_class = function(domain) return join(domain, "developer-console") end,
   },
   ide = {

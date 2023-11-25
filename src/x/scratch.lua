@@ -39,22 +39,21 @@ local function decorate(c)
   if c.xscratch == true then return end
 
   c.floating = true
-  c.ontop = true
-  c.above = true
   c.sticky = true
   c.skip_taskbar = true
   c.hidden = true
   c.screen = awful.screen.focused()
-  c.hidden = true
 
   c.xscratch = true -- used for filtering
 
   if awful.rules.match_any(c, x.xprop.modal_rulep()) then
     c.xkind = "modal"  -- for scan+track
+    c.above = true
     c.xshutdown = true -- shutdown qube if client closed
     c.fullscreen = true
   elseif awful.rules.match_any(c, x.xprop.dev_console_rulep()) then
     c.xkind = "dev_console" -- for scan+track
+    c.ontop = true
     x.client.set_rel_height(c, 0.75)
     awful.placement.top(c)
     awful.placement.maximize_horizontally(c)

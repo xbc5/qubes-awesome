@@ -1,4 +1,5 @@
 local awful = require("awful")
+local gears = require("gears")
 local x = {
   xprop = require("x.xprop"),
   notify = require("x.notify"),
@@ -6,6 +7,14 @@ local x = {
   util = require("x.util"),
   client = require("x.client"),
 }
+
+local M = {
+  key = {
+    global = {},
+    client = {},
+  },
+}
+
 
 -- Hide everything of the same kind except one item.
 -- @param c An Awesome clent.
@@ -17,6 +26,10 @@ local function hide_all_except(c)
       client.xhide()
     end
   end
+end
+
+function M.is_scratch(c)
+  return awful.rules.match_any(c, x.xprop.scratch_rulep())
 end
 
 -- Add xutility functions and configuration properties to a client.
@@ -87,12 +100,8 @@ end
 -- @return nil
 function Manager:scan()
   for _, c in pairs(client.get()) do
-    if self:is_scratch(c) then decorate(c) end
+    if M.is_scratch(c) then decorate(c) end
   end
-end
-
-function Manager:is_scratch(c)
-  return awful.rules.match_any(c, x.xprop.scratch_rulep())
 end
 
 -- Hide everything. Useful during startup to prevent
@@ -100,7 +109,7 @@ end
 -- @return nil
 function Manager:hide_all()
   for _, c in pairs(client.get()) do
-    if self:is_scratch(c) then c.xhide() end
+    if M.is_scratch(c) then c.xhide() end
   end
 end
 
@@ -160,7 +169,7 @@ function Manager:toggle_matrix()
   self:toggle(x.xprop.matrix_c.class, x.cmd.matrix)
 end
 
-local manager = Manager.new()
+M.manager = Manager.new()
 
 client.connect_signal("unmanage", function(c)
   if awful.rules.match_any(c, x.xprop.scratch_rulep()) then
@@ -176,8 +185,53 @@ client.connect_signal("manage", function(c)
 end)
 
 awesome.connect_signal("startup", function()
-  manager:scan()
-  manager:hide_all()
+  M.manager:scan()
+  M.manager:hide_all()
 end)
 
-return manager
+function M.key.client(mod)
+  if M.key._client ~= nil then return M.key._client end
+
+  local k = awful.key({ mod }, "Return",
+                      function(c) M.manager:toggle_dev_console(c.qubes_vmname) end,
+                      { description = "contextual developer console", group = "launcher" })
+
+  M.key._client = k
+  return M.key._client
+end
+
+
+function M.key.global(mod)
+  if M.key._global ~= nil then return M.key._global end
+
+  M.key._global = gears.table.join(
+    awful.key({ mod }, "Escape",
+              function() M.manager:scan() end,
+              { description = "reset views to a sane default", group = "awesome" }),
+
+    awful.key({ mod }, "y",
+              function() M.manager:toggle_matrix() end,
+              { description = "matrix", group = "scratch" }),
+
+    awful.key({ mod }, ",",
+              function() M.manager:toggle_notes() end,
+              { description = "notes", group = "scratch" }))
+
+    return M.key._global
+end
+
+-- when sticky is focused, prevent interaction with background elements -- e.g. movement:
+--  enable only the keys relevant to that scratch.
+client.connect_signal("focus", function(c)
+  if M.is_scratch(c) then
+    root.keys(M.key.global())
+  end
+end)
+
+client.connect_signal("unfocus", function(c)
+  if M.is_scratch(c) then
+    root.keys(require("x.key").global()) -- everything
+  end
+end)
+
+return M

@@ -12,6 +12,7 @@ local x = {
   tag = require("x.tag"),
   scratch = require("x.scratch"),
   qube = require("x.qube"),
+  xprop = require("x.xprop"),
 }
 
 local M = {}
@@ -37,9 +38,7 @@ function M.client()
   if M._client ~= nil then return M._client end
 
   M._client = gears.table.join(
-    awful.key({ MOD }, "Return",
-              function(c) x.scratch:toggle_dev_console(c.qubes_vmname) end,
-              { description = "contextual developer console", group = "launcher" }),
+    x.scratch.key.client(MOD),
 
     awful.key({ MOD, "Shift" }, "f",
               function(c) toggle_fullscreen(c) end,
@@ -76,6 +75,7 @@ function M.client()
   return M._client
 end
 
+
 -- Get a table of awful.key specifications. This is created only once, then cached.
 -- You will need to add these to root.keys(). Feel free to call this function multiple times,
 -- safe in the knowledge that it creates keys only once.
@@ -109,6 +109,7 @@ function M.global()
   M._global = gears.table.join(
     _tags,
     _layouts,
+    x.scratch.key.global(MOD),
 
     -- volume
     awful.key({ MOD }, "F1",
@@ -122,15 +123,6 @@ function M.global()
     awful.key({ MOD }, "F3",
               function() x.cmd.volume("up") end,
               { description = "volume up", group = "system" }),
-
-    -- scratch
-    awful.key({ MOD }, "y",
-              function() x.scratch:toggle_matrix() end,
-              { description = "matrix", group = "scratch" }),
-
-    awful.key({ MOD }, ",",
-              function() x.scratch:toggle_notes() end,
-              { description = "notes", group = "scratch" }),
 
     awful.key({ MOD, "Shift" }, "p",
               function() x.cmd.ide(x.qube.dev) end,
@@ -218,11 +210,7 @@ function M.global()
     -- run
     awful.key({ MOD }, "p",
               function() menubar.show() end,
-              { description = "show the menubar", group = "launcher" }),
-
-    awful.key({ MOD }, "Escape",
-              function() x.scratch:scan() end,
-              { description = "reset views to a sane default", group = "awesome" }))
+              { description = "show the menubar", group = "launcher" }))
 
     return M._global
 end

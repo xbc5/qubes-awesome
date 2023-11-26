@@ -1,5 +1,6 @@
 local awful = require("awful")
 local gears = require("gears")
+local rub = require("rubato")
 local x = {
   xprop = require("x.xprop"),
   notify = require("x.notify"),
@@ -28,8 +29,63 @@ local function hide_all_except(c)
   end
 end
 
+function M.is_dev_console(c)
+  return awful.rules.match_any(c, x.xprop.dev_console_rulep())
+end
+
+function M.is_modal(c)
+  return awful.rules.match_any(c, x.xprop.modal_rulep())
+end
+
 function M.is_scratch(c)
   return awful.rules.match_any(c, x.xprop.scratch_rulep())
+end
+
+local function decorate_dev_console(c)
+  c.xkind = "dev_console" -- for scan+track
+
+  -- a fixed size
+  local size = 0.65
+  -- set its size, and position it offscreen
+  x.height = x.client.set_rel_height(c, size)
+  x.y = x.client.set_rel_y(c, size * -1) -- move it offscreen
+
+
+  local anim = rub.timed {
+    duration = 1/8, --half a second
+    override_dt = true, --better accuracy for testing
+    rate = 100,
+    subscribed = function(y) x.client.set_rel_y(c, y) end
+  }
+  c.ontop = true
+  awful.placement.top(c)
+  awful.placement.maximize_horizontally(c)
+
+  function c.xhide()
+    anim.target = size * -1 -- move it offscreen (up)
+    c.hidden = true
+  end
+
+  function c.xshow()
+    hide_all_except(c)
+    c.hidden = false
+    anim.target = 0 -- pull it onscreen (down) to 0
+    c.xfocus()
+  end
+
+  function c.xclose()
+    c.xhide()
+    if c.xshutdown then
+      x.cmd.shutown(c.qubes_vmname, c.xshutdown)
+    end
+  end
+end
+
+local function decorate_modal(c)
+  c.xkind = "modal"  -- for scan+track
+  c.above = true
+  c.xshutdown = true -- shutdown qube if client closed
+  c.fullscreen = true
 end
 
 -- Add xutility functions and configuration properties to a client.
@@ -45,21 +101,6 @@ local function decorate(c)
   c.screen = awful.screen.focused()
 
   c.xscratch = true -- used for filtering
-
-  if awful.rules.match_any(c, x.xprop.modal_rulep()) then
-    c.xkind = "modal"  -- for scan+track
-    c.above = true
-    c.xshutdown = true -- shutdown qube if client closed
-    c.fullscreen = true
-  elseif awful.rules.match_any(c, x.xprop.dev_console_rulep()) then
-    c.xkind = "dev_console" -- for scan+track
-    c.ontop = true
-    x.client.set_rel_height(c, 0.75)
-    awful.placement.top(c)
-    awful.placement.maximize_horizontally(c)
-  else
-    error("unknown scratch kind: " .. c.class)
-  end
 
   function c.xfocus()
     client.focus = c
@@ -85,6 +126,16 @@ local function decorate(c)
   function c.xtoggle()
     if c.hidden then c.xshow() else c.xhide() end
   end
+
+  -- overrides the above defaults
+  if M.is_modal(c) then
+    decorate_modal(c)
+  elseif M.is_dev_console(c) then
+    decorate_dev_console(c)
+  else
+    error("unknown scratch kind: " .. c.class)
+  end
+
 end
 
 local Manager = {}

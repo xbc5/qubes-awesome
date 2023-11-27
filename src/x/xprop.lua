@@ -30,6 +30,13 @@ local M = {
   ide = {
     class_p = "ide$",
   },
+  email_client = {
+    class = "email:client",
+    class_p = "^email:client$",
+  },
+  email = {
+    class_p = "^email:.+$",
+  },
   librewolf = {
     class_p = "librewolf[-].+$"  -- librewolf includes the profile name
   },
@@ -63,6 +70,18 @@ end
 -- @return An Awesome rule: { class = {...} }
 function M.scratch_rulep()
   return { class = { M.matrix_c.class_p, M.notes.class_p, M.dev_console.class_p } }
+end
+
+-- A pattern rule that matches the email client.
+-- @return An Awesome rule: { class = {...} }
+function M.email_client_rulep()
+  return { class = { M.email_client.class_p } }
+end
+
+-- A pattern rule that matches all clients for the email domain.
+-- @return An Awesome rule: { class = {...} }
+function M.email_rulep()
+  return { class = { M.email.class_p } }
 end
 
 -- A rule that matches all browsers

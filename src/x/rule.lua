@@ -1,4 +1,5 @@
 local awful = require("awful")
+local xemail = require("x.email")
 local x = {
   key = require("x.key"),
   tag = require("x.tag"),
@@ -21,6 +22,8 @@ awful.rules.rules = {
         placement = awful.placement.no_overlap+awful.placement.no_offscreen,
       }
     },
+
+    xemail.tag:rule(),
 
     -- dev-s
     { rule = { class = xp.dev_s.class_p },

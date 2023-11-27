@@ -24,6 +24,23 @@ function M.run_error(msg, log)
   })
 end
 
+-- When a tag starts its VMs and clients have started.
+function M.tag_ready(name)
+  naughty.notify({
+    preset = M.preset.normal,
+    title = name .. " ready",
+  })
+end
+
+-- When the VMs or clients associated with a tag fail to start
+function M.tag_error(name, stderr)
+  naughty.notify({
+    preset = M.preset.critical,
+    title = name .. " error",
+    text = stderr,
+  })
+end
+
 function M.client_error(msg, log)
   naughty.notify({
     preset = M.preset.critical,

@@ -9,14 +9,16 @@ local M = {}
 -- @param cmd The command (string) to run.
 -- @param cb An optional callback, called after the command completes: cb(ok, stdout, stderr),
 --   where ok is `exit_code == 0`.
-function M.async(cmd, cb)
+-- @param silent bool: don't notify on errors?
+function M.async(cmd, cb, silent)
   awful.spawn.easy_async(cmd, function(stdout, stderr, _, exit_code)
-    if exit_code > 0 then
+    if not silent and exit_code > 0 then
       x.notify.run_error(cmd, stderr)
     end
     -- we may pass a boolean own from some other part of the code, so
     -- cb could be anything -- check for explicit function. This approach
     -- means less type checking elsewhere in the app, this is also a safer approach.
+
     if type(cb) == "function" then
       cb(exit_code == 0, stdout, stderr)
     end
@@ -39,6 +41,28 @@ end
 
 function M.ide(qube, cb)
   M.async("ide " ..  qube, cb)
+end
+
+function M.start_email(cb)
+  M.async("email", cb)
+end
+
+-- Run the email client
+function M.spawn_email(cb)
+  M.async("email", cb)
+end
+
+function M.stop_email(cb)
+  M.async("email x --wait", cb)
+end
+
+function M.restart_email(cb)
+  M.async("email r", cb)
+end
+
+-- Check that the email domains are running.
+function M.check_email(cb)
+  M.async("email check", cb, true)
 end
 
 -- Shutdown a qube.

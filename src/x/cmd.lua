@@ -60,9 +60,21 @@ function M.restart_email(cb)
   M.async("email r", cb)
 end
 
--- Check that the email domains are running.
-function M.check_email(cb)
-  M.async("email check", cb, true)
+function M.start_fin(cb)
+  M.async("fin --wait", cb)
+end
+
+-- Run the email client
+function M.spawn_fin(cb)
+  M.async("fin --wait", cb)
+end
+
+function M.stop_fin(cb)
+  M.async("fin --wait --shutdown", cb)
+end
+
+function M.restart_fin(cb)
+  M.async("fin --wait --restart", cb)
 end
 
 -- Shutdown a qube.

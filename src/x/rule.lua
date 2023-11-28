@@ -1,5 +1,6 @@
 local awful = require("awful")
 local xemail = require("x.email")
+local xfin = require("x.fin")
 local x = {
   key = require("x.key"),
   tag = require("x.tag"),
@@ -24,6 +25,7 @@ awful.rules.rules = {
     },
 
     xemail.tag:rule(),
+    xfin.tag:rule(),
 
     -- dev-s
     { rule = { class = xp.dev_s.class_p },

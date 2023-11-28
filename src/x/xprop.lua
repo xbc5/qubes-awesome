@@ -20,6 +20,9 @@ local M = {
   dev_s = {
     class_p = "^dev[-]s", -- '-' does not match on its own
   },
+  fin = {
+    class_p = "^fin",
+  },
 
   -- apps
   dev_console = {
@@ -83,6 +86,19 @@ end
 function M.email_rulep()
   return { class = { M.email.class_p } }
 end
+
+-- A pattern rule that matches the fin domain
+-- @return An Awesome rule: { class = {...} }
+function M.fin_rulep()
+  return { class = { M.fin.class_p .. ":.+$" } }
+end
+
+-- A pattern rule that matches the primary fin domain
+-- @return An Awesome rule: { class = {...} }
+function M.fin_client_rulep()
+  return { class = { join(M.fin.class_p, M.librewolf.class_p) } }
+end
+
 
 -- A rule that matches all browsers
 -- @return An Awesome rule: { class = {...} }

@@ -13,8 +13,7 @@ local M = {
     gap_single_client  = false,
     gap                = 3,
   },
-  name = { daily = "daily",
-           dev_e = "dev:e",
+  name = { dev_e = "dev:e",
            dev_t = "dev:t",
            dev_b = "dev:b",
            dev_s = "dev-s",
@@ -23,10 +22,6 @@ local M = {
 }
 
 M.specs = {
-  { name = M.name.daily,
-    key = "m",
-    spec = { selected = true, },
-  },
   { name = M.name.dev_e,
     key = "n",
     spec = { },

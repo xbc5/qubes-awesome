@@ -115,6 +115,7 @@ function M.global()
     x.scratch.key.global(M.mod),
     xemail.tag:gkeys(),
     xtag.notes:gkeys(),
+    xtag.daily:gkeys(),
     xfin.tag:gkeys(),
 
     -- volume

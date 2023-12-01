@@ -114,6 +114,13 @@ function M.fin_client_rulep()
   return { class = { join(M.fin.class_p, M.librewolf.class_p) } }
 end
 
+function M.daily_client_rulep()
+  return { class = { join(M.daily.class_p, M.librewolf.class_p) } }
+end
+
+function M.daily_domain_rulep()
+  return { class = { M.daily.class_p .. ":.+$" } }
+end
 
 -- A rule that matches all browsers
 -- @return An Awesome rule: { class = {...} }

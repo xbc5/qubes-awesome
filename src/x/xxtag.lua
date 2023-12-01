@@ -13,7 +13,7 @@ local XXTag = {}
 XXTag.__index = XXTag
 
 function XXTag.new(client_rulep, domain_rulep, cmd, rules)
-  local self = setmetatable(XXTag, xtag.Tag)
+  local self = setmetatable({}, XXTag)
 
   -- create the tags
   for key, spec in pairs(rules.view) do
@@ -122,11 +122,18 @@ function XXTag:gkeys()
   return keys
 end
 
+
 M.notes = XXTag.new(xprop.notes_client_rulep,
                     xprop.notes_domain_rulep,
                     cmd.notes,
                     { view = { [","] = { rule = xprop.xnotes:pat():domain():app():build(true),
                                          tagname = "notes" }},
                       stop = { rule = xprop.notes_client_rulep }})
+
+M.daily = XXTag.new(xprop.daily_client_rulep,
+                    xprop.daily_domain_rulep,
+                    cmd.daily,
+                    { view = { ["m"] = { rule = xprop.daily_domain_rulep(),
+                                         tagname = "daily" }}})
 
 return M

@@ -112,6 +112,7 @@ M.daily = Qube.new("daily --wait --start", "daily --wait --shutdown", "daily --w
 M.dev_e = Qube.new("dev --wait --start", "dev --wait --shutdown", "dev --wait --ide")
 M.dev_t = Qube.new("dev --wait --start", "dev --wait --shutdown", "dev --wait --terminal")
 M.dev_b = Qube.new("dev --wait --start", "dev --wait --shutdown", "dev --wait --browser")
+M.dev_s = Qube.new("dev-s --wait --start", "dev-s --wait --shutdown", "dev-s --wait --ide")
 
 -- Start a 'developer console' on a qube, or Dom0.
 -- @param domain [OPTIONAL] A qube name, or Dom0.

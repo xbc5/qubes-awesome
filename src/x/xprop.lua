@@ -147,6 +147,14 @@ function M.dev_t_client_rulep()
   return { class = M.terminals_class(M.dev.class) }
 end
 
+function M.dev_s_domain_rulep()
+  return { class = M.dev_s.class_p .. ":.+$" }
+end
+
+function M.dev_s_client_rulep()
+  return { class = join(M.dev_s.class_p, M.ide.class_p) }
+end
+
 function M.dev_domain_rulep()
   return { class = { join(M.dev.class_p, ".+$") } }
 end

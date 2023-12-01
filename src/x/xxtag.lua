@@ -17,7 +17,7 @@ function XXTag.new(client_rulep, domain_rulep, cmd, rules)
 
   -- create the tags
   for key, spec in pairs(rules.view) do
-    self:create({ name = spec.tagname, key = key })
+    self:create({ name = spec.tagname, key = key, spec = spec.spec })
   end
 
   self._client_rulep = client_rulep
@@ -135,5 +135,25 @@ M.daily = XXTag.new(xprop.daily_client_rulep,
                     cmd.daily,
                     { view = { ["m"] = { rule = xprop.daily_domain_rulep(),
                                          tagname = "daily" }}})
+-- dev IDE
+M.dev_e = XXTag.new(xprop.dev_e_client_rulep,
+                    xprop.dev_domain_rulep,
+                    cmd.dev_e,
+                    { view = { ["n"] = { rule = xprop.dev_e_client_rulep(),
+                                         tagname = "dev:e" }}})
 
+-- dev browser
+M.dev_b = XXTag.new(xprop.dev_b_client_rulep,
+                    xprop.dev_domain_rulep,
+                    cmd.dev_b,
+                    { view = { ["b"] = { rule = xprop.dev_b_client_rulep(),
+                                         tagname = "dev:b" }}})
+
+-- dev terminal
+M.dev_t = XXTag.new(xprop.dev_t_client_rulep,
+                    xprop.dev_domain_rulep,
+                    cmd.dev_t,
+                    { view = { ["u"] = { rule = xprop.dev_t_client_rulep(),
+                                         spec = { layout = awful.layout.suit.tile },
+                                         tagname = "dev:t" }}})
 return M

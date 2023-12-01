@@ -13,29 +13,12 @@ local M = {
     gap_single_client  = false,
     gap                = 3,
   },
-  name = { dev_e = "dev:e",
-           dev_t = "dev:t",
-           dev_b = "dev:b",
-           dev_s = "dev-s",
+  name = { dev_s = "dev-s",
            dom0  = "dom0",
          }
 }
 
 M.specs = {
-  { name = M.name.dev_e,
-    key = "n",
-    spec = { },
-  },
-  { name = M.name.dev_b,
-    key = "b",
-    spec = { },
-  },
-  { name = M.name.dev_t,
-    key = "u",
-    spec = {
-      layout = awful.layout.suit.tile,
-    },
-  },
   { name = M.name.dev_s,
     key = "i",
     spec = { },

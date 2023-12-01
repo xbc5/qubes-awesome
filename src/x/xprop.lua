@@ -15,6 +15,7 @@ local M = {
     class_p = "^daily",
   },
   dev = {
+    class   = "dev",
     class_p = "^dev",
   },
   dev_s = {
@@ -57,7 +58,19 @@ local M = {
   rofi = {
     class_p = "[rR]ofi$", -- [:^][rR]ofi$ doesn't match "rofi" (i.e. dom0)
   },
+
+  -- terminals
+  kitty = {
+    class_p = "kitty",
+  },
+  xterm = {
+    class_p = "xterm",
+  },
 }
+
+function M.terminals_class(domain)
+  return {join(domain, M.kitty.class_p), join(domain, M.xterm.class_p)}
+end
 
 -- A pattern rule that matches the developer console for any domain.
 -- @return An Awesome rule: { class = {...} }
@@ -119,7 +132,23 @@ function M.daily_client_rulep()
 end
 
 function M.daily_domain_rulep()
-  return { class = { M.daily.class_p .. ":.+$" } }
+  return { class = { join(M.daily.class_p, ".+$") } }
+end
+
+function M.dev_e_client_rulep()
+  return { class = { join(M.dev.class_p, M.ide.class_p) } }
+end
+
+function M.dev_b_client_rulep()
+  return { class = { join(M.dev.class_p, M.librewolf.class_p) } }
+end
+
+function M.dev_t_client_rulep()
+  return { class = M.terminals_class(M.dev.class) }
+end
+
+function M.dev_domain_rulep()
+  return { class = { join(M.dev.class_p, ".+$") } }
 end
 
 -- A rule that matches all browsers

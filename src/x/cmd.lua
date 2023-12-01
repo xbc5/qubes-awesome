@@ -109,6 +109,9 @@ function Qube:spawn(cb) M.async(self._spawn, cb) end
 
 M.notes = Qube.new("notes --wait", "notes --wait --shutdown", "notes --wait")
 M.daily = Qube.new("daily --wait --start", "daily --wait --shutdown", "daily --wait")
+M.dev_e = Qube.new("dev --wait --start", "dev --wait --shutdown", "dev --wait --ide")
+M.dev_t = Qube.new("dev --wait --start", "dev --wait --shutdown", "dev --wait --terminal")
+M.dev_b = Qube.new("dev --wait --start", "dev --wait --shutdown", "dev --wait --browser")
 
 -- Start a 'developer console' on a qube, or Dom0.
 -- @param domain [OPTIONAL] A qube name, or Dom0.

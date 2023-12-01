@@ -116,6 +116,9 @@ function M.global()
     xemail.tag:gkeys(),
     xtag.notes:gkeys(),
     xtag.daily:gkeys(),
+    xtag.dev_e:gkeys(),
+    xtag.dev_b:gkeys(),
+    xtag.dev_t:gkeys(),
     xfin.tag:gkeys(),
 
     -- volume

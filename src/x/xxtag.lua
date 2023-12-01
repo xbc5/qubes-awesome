@@ -158,7 +158,7 @@ M.dev_t = XXTag.new(xprop.dev_t_client_rulep,
                                          tagname = "dev:t" }}})
 
 -- dev dev:s
-M.dev_t = XXTag.new(xprop.dev_s_client_rulep,
+M.dev_s = XXTag.new(xprop.dev_s_client_rulep,
                     xprop.dev_s_domain_rulep,
                     cmd.dev_s,
                     { view = { ["i"] = { rule = xprop.dev_s_client_rulep(),

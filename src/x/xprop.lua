@@ -19,6 +19,7 @@ local M = {
     class_p = "^dev",
   },
   dev_s = {
+    class = "dev-s",
     class_p = "^dev[-]s", -- '-' does not match on its own
   },
   fin = {
@@ -152,7 +153,7 @@ function M.dev_s_domain_rulep()
 end
 
 function M.dev_s_client_rulep()
-  return { class = join(M.dev_s.class_p, M.ide.class_p) }
+  return { class = M.terminals_class(M.dev_s.class) }
 end
 
 function M.dev_domain_rulep()

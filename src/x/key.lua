@@ -119,6 +119,7 @@ function M.global()
     xtag.dev_e:gkeys(),
     xtag.dev_b:gkeys(),
     xtag.dev_t:gkeys(),
+    xtag.dev_s:gkeys(),
     xfin.tag:gkeys(),
 
     -- volume

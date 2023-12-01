@@ -6,6 +6,7 @@ local menubar = require("menubar")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 local xemail = require("x.email")
+local xtag = require("x.xxtag")
 local xfin = require("x.fin")
 local x = {
   app = require("x.app"),
@@ -113,6 +114,7 @@ function M.global()
     _layouts,
     x.scratch.key.global(M.mod),
     xemail.tag:gkeys(),
+    xtag.notes:gkeys(),
     xfin.tag:gkeys(),
 
     -- volume

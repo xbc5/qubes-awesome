@@ -25,13 +25,6 @@ function M.async(cmd, cb, silent)
   end)
 end
 
--- Start notes.
--- @param cb An optional callback, called after the command completes: cb(ok, stdout, stderr),
---   where ok is `exit_code == 0`.
-function M.notes(cb)
-  M.async("notes --wait", cb)
-end
-
 -- Start matrix.
 -- @param cb An optional callback, called after the command completes: cb(ok, stdout, stderr),
 --   where ok is `exit_code == 0`.
@@ -86,6 +79,35 @@ function M.shutown(qube, cb)
     M.async("qvm-shutdown --wait " .. qube, cb)
   end
 end
+
+local Qube = {}
+Qube.__index = Qube
+
+function Qube.new(start, stop, spawn)
+  local self = setmetatable({}, Qube)
+  self._start = start
+  self._stop = stop
+  self._spawn = spawn
+
+  if not self._start then error("no start command") end
+  if not self._stop then error("no stop command") end
+  if not self._spawn then error("no spawn command") end
+  return self
+end
+
+-- Start the qube.
+-- @param cb fn(ok, stdout, stderr)
+function Qube:start(cb) M.async(self._start, cb) end
+
+-- Stop the qube.
+-- @param cb fn(ok, stdout, stderr)
+function Qube:stop(cb) M.async(self._stop, cb) end
+
+-- Spawn a client. It should also start the qube.
+-- @param cb fn(ok, stdout, stderr)
+function Qube:spawn(cb) M.async(self._spawn, cb) end
+
+M.notes = Qube.new("notes --wait", "notes --wait --shutdown", "notes --wait")
 
 -- Start a 'developer console' on a qube, or Dom0.
 -- @param domain [OPTIONAL] A qube name, or Dom0.

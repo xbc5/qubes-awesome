@@ -1,6 +1,7 @@
 local awful = require("awful")
 local xemail = require("x.email")
 local xfin = require("x.fin")
+local xtag = require("x.xxtag")
 local x = {
   key = require("x.key"),
   tag = require("x.tag"),
@@ -82,5 +83,7 @@ awful.rules.rules = {
       properties = { titlebars_enabled = true }
     },
 }
+
+table.insert(awful.rules.rules, xtag.notes:rule())
 
 return M

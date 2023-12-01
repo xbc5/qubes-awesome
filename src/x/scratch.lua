@@ -210,7 +210,7 @@ end
 -- Start the notes application.
 -- @return nil
 function Manager:toggle_notes()
-  self:toggle(x.xprop.notes.class, x.cmd.notes)
+  self:toggle(x.xprop.notes_c.class, x.cmd.notes)
 end
 
 -- Start the matrix client.
@@ -261,11 +261,7 @@ function M.key.global(mod)
 
     awful.key({ mod }, "y",
               function() M.manager:toggle_matrix() end,
-              { description = "matrix", group = "scratch" }),
-
-    awful.key({ mod }, ",",
-              function() M.manager:toggle_notes() end,
-              { description = "notes", group = "scratch" }))
+              { description = "matrix", group = "scratch" }))
 
     return M.key._global
 end

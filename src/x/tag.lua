@@ -13,16 +13,10 @@ local M = {
     gap_single_client  = false,
     gap                = 3,
   },
-  name = { dev_s = "dev-s",
-           dom0  = "dom0",
-         }
+  name = { dom0  = "dom0" }
 }
 
 M.specs = {
-  { name = M.name.dev_s,
-    key = "i",
-    spec = { },
-  },
   { name = M.name.dom0,
     key = "s",
     spec = { },

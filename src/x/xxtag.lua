@@ -2,7 +2,6 @@ local awful = require("awful")
 local gears = require("gears")
 
 local xprop = require("x.xprop")
-local xtag = require("x.xtag")
 local tag = require("x.tag")
 local xnotify = require("x.notify")
 local cmd = require("x.cmd")

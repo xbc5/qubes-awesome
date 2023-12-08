@@ -35,7 +35,10 @@ local M = {
     class_p = "developer[-]console$",
     full_class = function(domain) return join(domain, "developer-console") end,
   },
-  ide = {
+  vscodium = {
+    class_p = "[vV][sS][cC]odium$", -- caps required to work
+  },
+  ide = { -- the IDE class, not ALL IDE apps.
     class_p = "ide$",
   },
   email_client = {
@@ -137,7 +140,12 @@ function M.daily_domain_rulep()
 end
 
 function M.dev_e_client_rulep()
-  return { class = { join(M.dev.class_p, M.ide.class_p) } }
+  return {
+    class = {
+      join(M.dev.class_p, M.ide.class_p),
+      join(M.dev.class_p, M.vscodium.class_p),
+    }
+  }
 end
 
 function M.dev_b_client_rulep()
@@ -153,7 +161,12 @@ function M.dev_s_domain_rulep()
 end
 
 function M.dev_s_client_rulep()
-  return { class = { join(M.dev_s.class_p, M.ide.class_p) } }
+  return {
+    class = {
+      join(M.dev_s.class_p, M.ide.class_p),
+      join(M.dev_s.class_p, M.vscodium.class_p),
+    }
+  }
 end
 
 function M.dev_domain_rulep()
@@ -167,11 +180,10 @@ function M.browser_rule(qube)
   return { class = { join(qube, c) } }
 end
 
--- A rule that matches the IDE
+-- A rule that specifies all IDEs: e.g. ^foo:ide$; ^foo:vscodium$.
 -- @return An Awesome rule: { class = {...} }
 function M.ide_rule(qube)
-  local c = M.ide.class_p
-  return { class = { join(qube, c) } }
+  return { class = { join(qube, M.ide.class_p), join(qube, M.vscodium.class_p) } }
 end
 
 local Prop = {}

@@ -48,6 +48,9 @@ local M = {
   email = {
     class_p = "^email:.+$",
   },
+  firefox = {
+    class_p = "firefox$"  -- librewolf includes the profile name
+  },
   librewolf = {
     class_p = "librewolf[-].+$"  -- librewolf includes the profile name
   },
@@ -149,7 +152,12 @@ function M.dev_e_client_rulep()
 end
 
 function M.dev_b_client_rulep()
-  return { class = { join(M.dev.class_p, M.librewolf.class_p) } }
+  return {
+    class = {
+      join(M.dev.class_p, M.librewolf.class_p),
+      join(M.dev.class_p, M.firefox.class_p),
+    }
+  }
 end
 
 function M.dev_t_client_rulep()
